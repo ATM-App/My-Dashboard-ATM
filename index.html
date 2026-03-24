@@ -19,10 +19,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- VARIABLES --- */
+        /* --- VARIABLES iOS / VISION OS --- */
         :root {
             --atm-red: #CB3524;
             --atm-blue: #003D99;
+            
+            /* MODO DÍA */
             --bg-color: #F2F2F7; 
             --text-main: #1C1C1E;
             --text-secondary: #8E8E93;
@@ -36,6 +38,7 @@
             --dock-bg: rgba(45, 55, 72, 0.85); 
         }
 
+        /* MODO NOCHE */
         [data-theme="dark"] {
             --bg-color: #000000; 
             --text-main: #FFFFFF; 
@@ -50,7 +53,7 @@
             --dock-bg: rgba(30, 35, 45, 0.85);
         }
 
-        /* DEGRADADOS */
+        /* Degradados Premium Apps */
         .grad-red { background: linear-gradient(135deg, #FF3B30, #FF453A); }
         .grad-blue { background: linear-gradient(135deg, #007AFF, #0A84FF); }
         .grad-green { background: linear-gradient(135deg, #34C759, #30D158); }
@@ -78,27 +81,29 @@
             position: relative;
         }
 
-        /* FONDOS DINÁMICOS */
+        /* 🌟 FONDOS DINÁMICOS INTELIGENTES */
         body.weather-sun::before { content: ''; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(255, 204, 0, 0.15) 0%, transparent 60%); z-index: -1; animation: pulseSun 8s infinite alternate ease-in-out; pointer-events: none; }
         @keyframes pulseSun { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.1); opacity: 1; } }
+
         body.weather-rain::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(to bottom, rgba(100,150,255,0) 0%, rgba(100,150,255,0.15) 50%, rgba(100,150,255,0) 100%); background-size: 20px 150px; animation: rainFall 0.8s linear infinite; z-index: -1; pointer-events: none; }
         [data-theme="dark"] body.weather-rain::before { opacity: 0.4; }
         @keyframes rainFall { 0% { background-position: 0 0; } 100% { background-position: 10px 100vh; } }
+
         body.weather-night::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 80px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 80px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 290px 40px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 350px 210px, rgba(255,255,255,0.6), rgba(0,0,0,0)); background-repeat: repeat; background-size: 400px 400px; animation: twinkleStars 5s infinite alternate; z-index: -1; pointer-events: none; opacity: 0.6; }
         @keyframes twinkleStars { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
 
-        /* HEADER */
+        /* --- HEADER & NOTIFICACIONES --- */
         header { text-align: center; padding: 50px 20px 10px; width: 100%; max-width: 1200px; position: relative; }
         .atm-logo { width: 110px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: floatLogo 6s ease-in-out infinite; }
         h1 { font-weight: 800; font-size: 2.4rem; margin-bottom: 5px; letter-spacing: -1px; }
         .greeting-msg { font-size: 0.95rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px; }
 
         .header-buttons { position: absolute; top: 25px; right: 25px; display: flex; gap: 10px; z-index: 1000; }
-        .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; position: relative; backdrop-filter: blur(30px); display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow-color); }
+        .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow-color); }
         .icon-btn:hover { transform: scale(1.1); }
         .badge { position: absolute; top: -2px; right: -2px; background: #FF3B30; color: white; font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-color); }
 
-        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
+        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
         #notif-panel.active { right: 25px; opacity: 1; }
         .notif-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
         .notif-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; font-size: 0.85rem; }
@@ -106,21 +111,14 @@
         .notif-text strong { display: block; color: var(--text-main); font-size: 0.9rem; margin-bottom: 3px;}
         .notif-text span { color: var(--text-secondary); line-height: 1.4;}
 
-        /* BUSCADOR */
-        .spotlight-container { width: 100%; max-width: 600px; margin: 0 auto 30px; position: relative; padding: 0 20px; z-index: 50; }
-        .spotlight-input { width: 100%; padding: 18px 20px 18px 50px; font-size: 1rem; font-family: 'Titillium Web', sans-serif; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); backdrop-filter: blur(30px); outline: none; box-shadow: 0 8px 20px var(--shadow-color); transition: 0.3s; }
-        .spotlight-input::placeholder { color: var(--text-secondary); font-weight: 600; }
-        .spotlight-input:focus { border-color: var(--atm-blue); box-shadow: 0 10px 30px rgba(0, 61, 153, 0.2); }
-        .spotlight-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.2rem; }
-
-        /* ACCESOS RÁPIDOS */
+        /* --- ACCESOS RÁPIDOS --- */
         .quick-actions { display: flex; justify-content: center; gap: 30px; margin-bottom: 25px; }
         .action-link { color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
-        .action-link i.icon-box { width: 54px; height: 54px; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; border-radius: 26%; font-size: 1.4rem; box-shadow: 0 8px 16px var(--shadow-color); color: var(--text-main); transition: 0.3s; backdrop-filter: blur(20px); }
+        .action-link i.icon-box { width: 54px; height: 54px; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; border-radius: 26%; font-size: 1.4rem; box-shadow: 0 8px 16px var(--shadow-color); color: var(--text-main); transition: 0.3s; }
         .action-link:hover i.icon-box { transform: translateY(-4px) scale(1.05); color: var(--atm-red); border-color: var(--atm-red); }
 
-        /* TICKER NOTICIAS */
-        #news-ticker-wrapper { width: 100%; max-width: 900px; margin: 0 auto 30px; background: var(--card-bg); backdrop-filter: blur(30px) saturate(200%); border: 1px solid var(--card-border); border-radius: 14px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 8px 20px var(--shadow-color); position: relative; }
+        /* 📰 NEWS TICKER */
+        #news-ticker-wrapper { width: 100%; max-width: 900px; margin: 0 auto 30px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 8px 20px var(--shadow-color); position: relative; }
         .ticker-badge { background: var(--atm-red); color: white; font-weight: 800; font-size: 0.75rem; padding: 12px 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 2; box-shadow: 4px 0 15px rgba(0,0,0,0.2); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .ticker-badge i { animation: pulseFlash 1.5s infinite alternate; }
         @keyframes pulseFlash { 0% { opacity: 0.4; } 100% { opacity: 1; } }
@@ -131,10 +129,18 @@
         .ticker-item i { color: var(--atm-blue); margin-right: 8px; font-size: 0.9em; }
         @keyframes tickerScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
-        /* WIDGETS */
+        /* --- SPOTLIGHT SEARCH --- */
+        .spotlight-container { width: 100%; max-width: 600px; margin: 0 auto 30px; position: relative; padding: 0 20px; z-index: 50; }
+        .spotlight-input { width: 100%; padding: 18px 20px 18px 50px; font-size: 1rem; font-family: 'Titillium Web', sans-serif; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); outline: none; box-shadow: 0 8px 20px var(--shadow-color); transition: 0.3s; }
+        .spotlight-input::placeholder { color: var(--text-secondary); font-weight: 600; }
+        .spotlight-input:focus { border-color: var(--atm-blue); box-shadow: 0 10px 30px rgba(0, 61, 153, 0.2); }
+        .spotlight-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.2rem; }
+
+        /* --- WIDGETS --- */
         .info-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; padding: 0 20px; margin-bottom: 30px; perspective: 1000px; }
-        .info-card { background: var(--card-bg); border-radius: 32px; padding: 25px; backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; transition: transform 0.3s ease; position: relative; }
-        .info-card:not(.flip-container):hover { transform: translateY(-3px); }
+        
+        .info-card { background: var(--card-bg); border-radius: 32px; padding: 25px; border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; transition: transform 0.3s ease; position: relative;}
+        .info-card:hover { transform: translateY(-3px); }
         .info-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); font-weight: 700; width: 100%; }
 
         .weather-row { display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; }
@@ -144,10 +150,10 @@
         .clock-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
 
         /* Widget Reversible */
-        .flip-container { background: transparent; border: none; padding: 0; box-shadow: none; backdrop-filter: none; }
+        .flip-container { background: transparent; border: none; padding: 0; box-shadow: none; }
         .flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; min-height: 220px; }
         .flip-container.flipped .flipper { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; background: var(--card-bg); border-radius: 32px; padding: 25px; backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; }
+        .front, .back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; background: var(--card-bg); border-radius: 32px; padding: 25px; border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; }
         .back { transform: rotateY(180deg); }
         
         .header-action-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.1rem; cursor: pointer; transition: 0.2s; padding: 5px; }
@@ -170,11 +176,18 @@
         .countdown { font-size: 2.2rem; font-weight: 800; color: var(--atm-red); font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 5px; }
         .match-date { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
 
-        /* --- APPS GRID (SIN 3D PARA TABLETS) --- */
+        /* --- APPS GRID PLANO Y ESTABLE PARA TABLET --- */
         .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; width: 100%; max-width: 1200px; padding: 0 20px 20px; }
-        .card { background: var(--card-bg); border-radius: 32px; padding: 30px 25px; text-decoration: none; color: var(--text-main); backdrop-filter: blur(30px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 10px 30px var(--shadow-color); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        
+        .card { 
+            background: var(--card-bg); border-radius: 32px; padding: 30px 25px; text-decoration: none; color: var(--text-main); 
+            border: 1px solid var(--card-border); box-shadow: 0 10px 30px var(--shadow-color); 
+            display: flex; flex-direction: column; align-items: center; text-align: center; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
         .card.hidden { display: none !important; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -5px var(--shadow-color); }
+        
         .icon-container { width: 80px; height: 80px; border-radius: 26%; display: flex; align-items: center; justify-content: center; font-size: 34px; color: white; margin-bottom: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
         .card h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2;}
         .card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 25px; flex-grow: 1; }
@@ -185,17 +198,15 @@
         .atleti-banner-img { max-width: 350px; width: 80%; height: auto; border-radius: 12px; box-shadow: 0 10px 25px var(--shadow-color); transition: transform 0.4s ease; }
         .atleti-banner-img:hover { transform: scale(1.03); }
 
-        /* --- DOCK LATERAL --- */
+        /* --- DOCK LATERAL DERECHO --- */
         .vertical-dock { 
             position: fixed; top: 50%; right: 25px; 
-            transform: translateY(-50%); 
-            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); 
+            transform: translateY(-50%);
+            background: var(--dock-bg); 
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; 
             display: flex; flex-direction: column; align-items: center; gap: 25px; 
             box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; 
-            transition: opacity 0.2s ease, visibility 0.2s ease; 
         }
-        .vertical-dock.hidden-by-modal { opacity: 0; visibility: hidden; pointer-events: none; }
         .dock-item { position: relative; color: rgba(255, 255, 255, 0.5); font-size: 1.5rem; text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; cursor: pointer;}
         .dock-item:not(.main-action):hover { color: #00FF87; transform: scale(1.15); text-shadow: 0 0 15px rgba(0, 255, 135, 0.6); }
         .dock-item.main-action { width: 65px; height: 65px; background: var(--atm-red); color: white; border-radius: 50%; border: 4px solid white; font-size: 1.8rem; box-shadow: 0 0 25px rgba(203, 53, 36, 0.7), inset 0 0 10px rgba(0,0,0,0.2); margin: 5px 0; z-index: 2; }
@@ -203,19 +214,19 @@
         .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
         .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
 
-        /* --- MODALES (SIN BLUR PARA EVITAR EL BUG GPU DE ANDROID) --- */
+        /* --- MODALES SOLIDOS SIN PARPADEOS --- */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); /* Fondo sólido */
+            background: rgba(0,0,0,0.85); /* Fondo sólido puro para no marear la tablet */
             z-index: 2000; display: flex; align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; pointer-events: none; 
-            transition: opacity 0.3s ease, visibility 0.3s ease; 
+            transition: opacity 0.2s ease, visibility 0.2s ease; 
         }
         .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { 
             background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; 
             width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            transform: scale(0.95); transition: transform 0.3s ease; 
+            transform: scale(0.95); transition: transform 0.2s ease; 
             max-height: 90vh; overflow-y: auto; 
         }
         .modal-overlay.active .modal-content { transform: scale(1); }
@@ -225,6 +236,7 @@
         .close-modal { background: transparent; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s, transform 0.2s; }
         .close-modal:hover { color: var(--atm-red); transform: scale(1.1); }
         
+        /* Modal Ajustes */
         .modal-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
         .modal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
         .modal-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; opacity: 0.4; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.3s; }
@@ -269,7 +281,6 @@
         <div class="header-buttons">
             <button id="settings-btn" class="icon-btn sound-click"><i class="fa-solid fa-gear"></i></button>
             <button id="notif-btn" class="icon-btn sound-click"><i class="fa-solid fa-bell"></i><span class="badge">1</span></button>
-            <button id="install-btn" class="icon-btn sound-click"><i class="fa-solid fa-download"></i></button>
             <button class="icon-btn sound-flip" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
         </div>
 
@@ -278,9 +289,13 @@
             <div class="notif-item">
                 <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-check-circle"></i></div>
                 <div class="notif-text">
-                    <strong>Sistema Reparado</strong>
-                    <span>Efectos 3D internos eliminados para compatibilidad total con Android. Los enlaces abren en ventanas independientes.</span>
+                    <strong>Sistema Estable</strong>
+                    <span>Se han borrado todos los efectos 3D que colapsaban la tablet. Las apps ahora abren en ventana externa de forma nativa.</span>
                 </div>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="notif-text"><strong>Experiencia Sensorial</strong><span>Sonidos táctiles activados.</span></div>
             </div>
         </div>
 
@@ -294,9 +309,9 @@
         </div>
 
         <div class="quick-actions">
-            <a href="https://www.rffm.es" target="_blank" rel="external noopener noreferrer" class="action-link sound-click" onclick="window.open(this.href, '_blank'); return false;"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
-            <a href="https://drive.google.com" target="_blank" rel="external noopener noreferrer" class="action-link sound-click" onclick="window.open(this.href, '_blank'); return false;"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
-            <a href="https://outlook.office.com" target="_blank" rel="external noopener noreferrer" class="action-link sound-click" onclick="window.open(this.href, '_blank'); return false;"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+            <a href="https://www.rffm.es" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
         </div>
 
         <div class="news-ticker-container" id="news-ticker-wrapper">
@@ -309,7 +324,7 @@
     </header>
 
     <div class="info-dashboard">
-        <div class="info-card js-tilt">
+        <div class="info-card">
             <div class="info-header">
                 <div><i class="fa-solid fa-location-arrow"></i> <span id="location-name">Detectando...</span></div>
             </div>
@@ -342,7 +357,7 @@
             </div>
         </div>
 
-        <div class="info-card js-tilt">
+        <div class="info-card">
             <div class="info-header">
                 <div><i class="fa-solid fa-star"></i> <span>Partido Destacado</span></div>
                 <button class="header-action-btn sound-swoosh" id="edit-match-btn" title="Editar Partido"><i class="fa-solid fa-pen"></i></button>
@@ -358,73 +373,73 @@
     </div>
 
     <div class="app-grid" id="apps-container">
-        <a href="https://atm-app.github.io/Partidos-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Partidos-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
             <h2 class="app-title">Partidos ATM</h2>
             <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
             <h2 class="app-title">Partidos GuardianLab</h2>
             <p>Seguimiento de partidos en vivo específico para porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ATM-Keepers-360-/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
             <h2 class="app-title">ATM Keepers 360</h2>
             <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
             <h2 class="app-title">AgendaKeepers</h2>
             <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
             <h2 class="app-title">ADN Keeper</h2>
             <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
             <h2 class="app-title">Insignias Guardianes</h2>
             <p>Juego por puntos y obtención de insignias de rendimiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
             <h2 class="app-title">Informes y Objetivos</h2>
             <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Trivial-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Trivial-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
             <h2 class="app-title">Trivial ATM</h2>
             <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
             <h2 class="app-title">Asistencia Keepers</h2>
             <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
             <h2 class="app-title">GK Jornadas ATM</h2>
             <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
             <h2 class="app-title">Jornadas Competición</h2>
             <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="#" target="_blank" rel="external noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;" class="card js-tilt sound-click">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
             <h2 class="app-title">Portal ATM</h2>
             <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
@@ -548,10 +563,10 @@
         ];
 
         const defaultTickerMessages = [
-            "⚠️ Recordatorio: Subir las sesiones a Keepers 360 antes del viernes.",
-            "📋 Control de Asistencia: Comprobar bajas de porteros.",
-            "🎯 Foco Táctico de hoy: Reflejos y transición.",
-            "🏆 Siguiente partido a la vista. ¡Aúpa Atleti!"
+            "⚠️ Recordatorio: Subir las sesiones de entrenamiento a Keepers 360 antes del viernes.",
+            "📋 Control de Asistencia: Comprobar bajas de porteros para el partido del fin de semana.",
+            "🎯 Foco Táctico de hoy: Trabajo de reflejos y transición defensa-ataque.",
+            "🏆 Siguiente partido a la vista. ¡A preparar el choque! Aúpa Atleti."
         ];
 
         let savedDockApps = JSON.parse(localStorage.getItem('atmDockApps')) || ["guardian", "agenda", "partidos"];
@@ -568,11 +583,10 @@
                     const a = document.createElement('a');
                     a.href = app.url; 
                     a.target = "_blank"; 
-                    a.rel = "external noopener noreferrer";
+                    a.rel = "noopener noreferrer"; 
                     a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
                     a.setAttribute('data-tooltip', app.title); 
                     a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
-                    a.setAttribute('onclick', "window.open(this.href, '_blank'); return false;");
                     dockContainer.appendChild(a);
                 }
             });
@@ -582,6 +596,7 @@
             const tickerWrapper = document.getElementById('news-ticker-wrapper');
             const tickerContainer = document.getElementById('ticker-messages-container');
             tickerContainer.innerHTML = '';
+            
             if(savedTickerMessages.length === 0) {
                 tickerWrapper.style.display = 'none';
             } else {
@@ -601,13 +616,13 @@
             tempSelection = [...savedDockApps]; 
             tickerTextArea.value = savedTickerMessages.join('\n'); 
             renderModalGrid(); 
+            dockElement.style.display = 'none'; /* Evitar pantallazos GPU en tablet */
             dockModal.classList.add('active');
-            dockElement.classList.add('hidden-by-modal'); 
         });
         
         document.getElementById('close-modal-btn').addEventListener('click', () => {
             dockModal.classList.remove('active');
-            dockElement.classList.remove('hidden-by-modal');
+            dockElement.style.display = ''; 
         });
         
         function renderModalGrid() {
@@ -641,7 +656,7 @@
                 renderTicker();
 
                 dockModal.classList.remove('active'); 
-                dockElement.classList.remove('hidden-by-modal');
+                dockElement.style.display = ''; 
             }
         });
         
@@ -672,13 +687,13 @@
         document.getElementById('edit-match-btn').addEventListener('click', () => {
             const savedMatch = JSON.parse(localStorage.getItem('atmMatch')) || { t1: "ATM", t2: "RMA", date: "2026-03-28T16:15" };
             team1Input.value = savedMatch.t1; team2Input.value = savedMatch.t2; dateInput.value = savedMatch.date;
+            dockElement.style.display = 'none'; 
             matchModal.classList.add('active');
-            dockElement.classList.add('hidden-by-modal');
         });
 
         document.getElementById('close-match-modal-btn').addEventListener('click', () => {
             matchModal.classList.remove('active');
-            dockElement.classList.remove('hidden-by-modal');
+            dockElement.style.display = ''; 
         });
 
         document.getElementById('save-match-btn').addEventListener('click', () => {
@@ -686,7 +701,7 @@
             const newMatch = { t1: team1Input.value.toUpperCase(), t2: team2Input.value.toUpperCase(), date: dateInput.value };
             localStorage.setItem('atmMatch', JSON.stringify(newMatch));
             matchModal.classList.remove('active');
-            dockElement.classList.remove('hidden-by-modal');
+            dockElement.style.display = ''; 
             startMatchTimer();
         });
 
@@ -811,7 +826,5 @@
         }
         initWeather();
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    <script> VanillaTilt.init(document.querySelectorAll(".js-tilt"), { max: 3, speed: 400, perspective: 2000 }); </script>
 </body>
 </html>
