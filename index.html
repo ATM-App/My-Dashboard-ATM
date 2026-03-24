@@ -118,7 +118,7 @@
         .action-link i.icon-box { width: 54px; height: 54px; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; border-radius: 26%; font-size: 1.4rem; box-shadow: 0 8px 16px var(--shadow-color); color: var(--text-main); transition: 0.3s; backdrop-filter: blur(20px); }
         .action-link:hover i.icon-box { transform: translateY(-4px) scale(1.05); color: var(--atm-red); border-color: var(--atm-red); }
 
-        /* 📰 NEWS TICKER */
+        /* 📰 NEWS TICKER (ÚLTIMA HORA) */
         #news-ticker-wrapper { width: 100%; max-width: 900px; margin: 0 auto 30px; background: var(--card-bg); backdrop-filter: blur(30px) saturate(200%); border: 1px solid var(--card-border); border-radius: 14px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 8px 20px var(--shadow-color); position: relative; }
         .ticker-badge { background: var(--atm-red); color: white; font-weight: 800; font-size: 0.75rem; padding: 12px 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 2; box-shadow: 4px 0 15px rgba(0,0,0,0.2); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .ticker-badge i { animation: pulseFlash 1.5s infinite alternate; }
@@ -193,17 +193,21 @@
         .atleti-banner-img:hover { transform: scale(1.03); }
 
         /* --- DOCK LATERAL DERECHO --- */
-        /* FIX TABLET: Se ha añadido translate3d para forzar renderizado en hardware y evitar Z-Fighting */
         .vertical-dock { 
             position: fixed; top: 50%; right: 25px; 
-            -webkit-transform: translateY(-50%) translate3d(0,0,0);
-            transform: translateY(-50%) translate3d(0,0,0);
-            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
+            transform: translateY(-50%);
+            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); 
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; 
             display: flex; flex-direction: column; align-items: center; gap: 25px; 
             box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; 
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease; /* Transición para ocultarlo rápido */
         }
+        .vertical-dock.hidden-by-modal {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         .dock-item { position: relative; color: rgba(255, 255, 255, 0.5); font-size: 1.5rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; cursor: pointer;}
         .dock-item:not(.main-action):hover { color: #00FF87; transform: scale(1.15); text-shadow: 0 0 15px rgba(0, 255, 135, 0.6); }
         .dock-item.main-action { width: 65px; height: 65px; background: var(--atm-red); color: white; border-radius: 50%; border: 4px solid white; font-size: 1.8rem; box-shadow: 0 0 25px rgba(203, 53, 36, 0.7), inset 0 0 10px rgba(0,0,0,0.2); margin: 5px 0; z-index: 2; }
@@ -212,28 +216,21 @@
         .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
 
         /* --- MODALES (CORREGIDO BUG PANTALLAZO EN TABLET) --- */
-        /* FIX TABLET: Se quita el blur del overlay y se fuerza hardware accel */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); /* Sin blur */
-            z-index: 9999; display: flex; align-items: center; justify-content: center; 
+            background: rgba(0,0,0,0.85); /* Fondo sólido, sin blur problemático */
+            z-index: 2000; display: flex; align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; pointer-events: none; 
             transition: opacity 0.3s ease, visibility 0.3s ease; 
-            -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0);
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
-            will-change: opacity;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { 
             background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; 
             width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            -webkit-transform: scale(0.95); transform: scale(0.95); 
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             max-height: 90vh; overflow-y: auto; 
-            -webkit-backface-visibility: hidden; backface-visibility: hidden; 
-            will-change: transform;
         }
-        .modal-overlay.active .modal-content { -webkit-transform: scale(1); transform: scale(1); }
+        .modal-overlay.active .modal-content { transform: scale(1); }
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .modal-header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
@@ -269,12 +266,7 @@
             .spotlight-icon { left: 35px; }
             .news-ticker-container { padding: 0 10px; }
             body { padding-right: 0; padding-bottom: 100px; }
-            .vertical-dock { 
-                top: auto; bottom: 15px; right: 50%; 
-                -webkit-transform: translateX(50%) translate3d(0,0,0);
-                transform: translateX(50%) translate3d(0,0,0);
-                flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; 
-            }
+            .vertical-dock { top: auto; bottom: 15px; right: 50%; transform: translateX(50%); flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; }
             .dock-item { font-size: 1.3rem; }
             .dock-item.main-action { width: 55px; height: 55px; border-width: 3px; font-size: 1.5rem; }
             .dock-item::after { display: none; } 
@@ -300,7 +292,7 @@
                 <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-check-circle"></i></div>
                 <div class="notif-text">
                     <strong>Rendimiento Optimizado</strong>
-                    <span>Se ha corregido el parpadeo gráfico al abrir los ajustes. Ahora todos los enlaces abren como PWA independiente.</span>
+                    <span>Se ha corregido el parpadeo gráfico aislando el Dock. Ahora todos los enlaces abren en ventanas limpias PWA nativas.</span>
                 </div>
             </div>
             <div class="notif-item">
@@ -319,9 +311,9 @@
         </div>
 
         <div class="quick-actions">
-            <a href="https://www.rffm.es" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
-            <a href="https://drive.google.com" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
-            <a href="https://outlook.office.com" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+            <a href="https://www.rffm.es" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
         </div>
 
         <div class="news-ticker-container" id="news-ticker-wrapper">
@@ -384,73 +376,73 @@
     </div>
 
     <div class="app-grid" id="apps-container">
-        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Partidos-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
             <h2 class="app-title">Partidos ATM</h2>
             <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
             <h2 class="app-title">Partidos GuardianLab</h2>
             <p>Seguimiento de partidos en vivo específico para porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
             <h2 class="app-title">ATM Keepers 360</h2>
             <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
             <h2 class="app-title">AgendaKeepers</h2>
             <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
             <h2 class="app-title">ADN Keeper</h2>
             <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
             <h2 class="app-title">Insignias Guardianes</h2>
             <p>Juego por puntos y obtención de insignias de rendimiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
             <h2 class="app-title">Informes y Objetivos</h2>
             <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Trivial-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
             <h2 class="app-title">Trivial ATM</h2>
             <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
             <h2 class="app-title">Asistencia Keepers</h2>
             <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
             <h2 class="app-title">GK Jornadas ATM</h2>
             <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click pwa-link">
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
             <h2 class="app-title">Jornadas Competición</h2>
             <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="#" class="card js-tilt sound-click pwa-link">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="card js-tilt sound-click">
             <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
             <h2 class="app-title">Portal ATM</h2>
             <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
@@ -507,23 +499,6 @@
     </div>
 
     <script>
-        /* =========================================
-           🚀 LANZADOR DE APPS PWA (CORREGIDO PARA TABLET)
-           ========================================= */
-        document.addEventListener('DOMContentLoaded', () => {
-            const pwaLinks = document.querySelectorAll('.pwa-link');
-            pwaLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const url = this.getAttribute('href');
-                    if (url && url !== '#') {
-                        // Fuerza al sistema operativo (Android/iOS) a tratarlo como una app popup/standalone
-                        window.open(url, '_blank', 'popup=yes,noopener,noreferrer');
-                    }
-                });
-            });
-        });
-
         /* =========================================
            🎧 SINTETIZADOR DE AUDIO WEB (UI SOUNDS)
            ========================================= */
@@ -610,16 +585,11 @@
                     const isCenter = index === 1;
                     const a = document.createElement('a');
                     a.href = app.url; 
-                    a.className = `dock-item sound-click pwa-link ${isCenter ? 'main-action' : ''}`;
+                    a.target = "_blank"; 
+                    a.rel = "noopener noreferrer"; /* HTML Nativo para ventanas externas */
+                    a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
                     a.setAttribute('data-tooltip', app.title); 
                     a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
-                    
-                    // Interceptar clics en el Dock para ventana PWA
-                    a.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        if(app.url !== '#') window.open(app.url, '_blank', 'popup=yes,noopener,noreferrer');
-                    });
-                    
                     dockContainer.appendChild(a);
                 }
             });
@@ -642,6 +612,7 @@
 
         const dockModal = document.getElementById('dock-settings-modal');
         const tickerTextArea = document.getElementById('ticker-input-textarea');
+        const dockElement = document.getElementById('dock-container'); /* Referencia al dock para ocultarlo */
 
         document.getElementById('settings-btn').addEventListener('click', () => {
             playUISound('swoosh'); 
@@ -649,9 +620,13 @@
             tickerTextArea.value = savedTickerMessages.join('\n'); 
             renderModalGrid(); 
             dockModal.classList.add('active');
+            dockElement.classList.add('hidden-by-modal'); /* SOLUCIÓN AL GLITCH: Ocultar Dock */
         });
         
-        document.getElementById('close-modal-btn').addEventListener('click', () => dockModal.classList.remove('active'));
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            dockModal.classList.remove('active');
+            dockElement.classList.remove('hidden-by-modal'); /* Vuelve a mostrar el Dock */
+        });
         
         function renderModalGrid() {
             const modalGrid = document.getElementById('modal-grid');
@@ -684,6 +659,7 @@
                 renderTicker();
 
                 dockModal.classList.remove('active'); 
+                dockElement.classList.remove('hidden-by-modal'); /* Mostrar dock al guardar */
             }
         });
         
@@ -715,15 +691,20 @@
             const savedMatch = JSON.parse(localStorage.getItem('atmMatch')) || { t1: "ATM", t2: "RMA", date: "2026-03-28T16:15" };
             team1Input.value = savedMatch.t1; team2Input.value = savedMatch.t2; dateInput.value = savedMatch.date;
             matchModal.classList.add('active');
+            dockElement.classList.add('hidden-by-modal'); /* Ocultar dock en este modal también */
         });
 
-        document.getElementById('close-match-modal-btn').addEventListener('click', () => matchModal.classList.remove('active'));
+        document.getElementById('close-match-modal-btn').addEventListener('click', () => {
+            matchModal.classList.remove('active');
+            dockElement.classList.remove('hidden-by-modal');
+        });
 
         document.getElementById('save-match-btn').addEventListener('click', () => {
             if(!team1Input.value || !team2Input.value || !dateInput.value) return alert("Rellena todos los campos.");
             const newMatch = { t1: team1Input.value.toUpperCase(), t2: team2Input.value.toUpperCase(), date: dateInput.value };
             localStorage.setItem('atmMatch', JSON.stringify(newMatch));
             matchModal.classList.remove('active');
+            dockElement.classList.remove('hidden-by-modal');
             startMatchTimer();
         });
 
@@ -759,6 +740,7 @@
             }, 1000);
         }
         startMatchTimer();
+
 
         /* =========================================
            RESTO DE LÓGICA (CLIMA, RELOJ, ETC.)
