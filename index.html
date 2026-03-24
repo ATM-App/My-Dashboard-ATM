@@ -19,11 +19,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- VARIABLES --- */
+        /* --- VARIABLES iOS / VISION OS --- */
         :root {
             --atm-red: #CB3524;
             --atm-blue: #003D99;
             
+            /* MODO DÍA */
             --bg-color: #F2F2F7; 
             --text-main: #1C1C1E;
             --text-secondary: #8E8E93;
@@ -34,10 +35,11 @@
             --btn-text: #007AFF;
             --active-day: #CB3524;
             --glass-panel: rgba(255, 255, 255, 0.85);
-            /* NUEVO DOCK AZUL ATM */
+            /* Dock Azul ATM */
             --dock-bg: rgba(0, 61, 153, 0.85); 
         }
 
+        /* MODO NOCHE */
         [data-theme="dark"] {
             --bg-color: #000000; 
             --text-main: #FFFFFF; 
@@ -49,7 +51,6 @@
             --btn-text: #FFFFFF;
             --active-day: #CB3524;
             --glass-panel: rgba(28, 28, 30, 0.85);
-            /* NUEVO DOCK AZUL ATM MÁS OSCURO */
             --dock-bg: rgba(0, 40, 100, 0.9);
         }
 
@@ -81,7 +82,7 @@
             position: relative;
         }
 
-        /* 🌟 FONDOS DINÁMICOS INTELIGENTES (CAPAS CORREGIDAS) */
+        /* 🌟 FONDOS DINÁMICOS INTELIGENTES (CAPAS VISIBLES) */
         body.weather-sun::before { content: ''; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(255, 204, 0, 0.18) 0%, transparent 60%); z-index: 0; animation: pulseSun 6s infinite alternate ease-in-out; pointer-events: none; }
         @keyframes pulseSun { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 1; } }
 
@@ -92,7 +93,7 @@
         body.weather-night::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 80px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 80px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 290px 40px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 350px 210px, rgba(255,255,255,0.6), rgba(0,0,0,0)); background-repeat: repeat; background-size: 400px 400px; animation: twinkleStars 5s infinite alternate; z-index: 0; pointer-events: none; opacity: 0.6; }
         @keyframes twinkleStars { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
 
-        /* --- HEADER & NOTIFICACIONES (CAPAS DELANTE DEL FONDO) --- */
+        /* --- HEADER & NOTIFICACIONES --- */
         header { position: relative; z-index: 1; text-align: center; padding: 50px 20px 10px; width: 100%; max-width: 1200px; }
         .atm-logo { width: 110px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: floatLogo 6s ease-in-out infinite; }
         h1 { font-weight: 800; font-size: 2.4rem; margin-bottom: 5px; letter-spacing: -1px; }
@@ -103,7 +104,7 @@
         .icon-btn:hover { transform: scale(1.1); }
         .badge { position: absolute; top: -2px; right: -2px; background: #FF3B30; color: white; font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-color); }
 
-        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
+        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
         #notif-panel.active { right: 25px; opacity: 1; }
         .notif-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
         .notif-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; font-size: 0.85rem; }
@@ -149,8 +150,8 @@
         .clock-time { font-size: 2.2rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
         .clock-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Widget Reversible */
-        .flip-container { background: transparent; border: none; padding: 0; box-shadow: none; perspective: 1000px; }
+        /* Widget Reversible (Sin perspective para evitar bugs) */
+        .flip-container { background: transparent; border: none; padding: 0; box-shadow: none; }
         .flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; min-height: 220px; }
         .flip-container.flipped .flipper { transform: rotateY(180deg); }
         .front, .back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; background: var(--card-bg); border-radius: 32px; padding: 25px; border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; }
@@ -176,7 +177,7 @@
         .countdown { font-size: 2.2rem; font-weight: 800; color: var(--atm-red); font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 5px; }
         .match-date { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
 
-        /* --- APPS GRID --- */
+        /* --- APPS GRID PLANO Y ESTABLE PARA TABLET --- */
         .app-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; width: 100%; max-width: 1200px; padding: 0 20px 20px; }
         
         .card { 
@@ -202,7 +203,7 @@
         .vertical-dock { 
             position: fixed; top: 50%; right: 25px; 
             transform: translateY(-50%);
-            background: var(--dock-bg); /* AZUL ATM */
+            background: var(--dock-bg); 
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; 
             display: flex; flex-direction: column; align-items: center; gap: 25px; 
             box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; 
@@ -289,13 +290,13 @@
             <div class="notif-item">
                 <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-check-circle"></i></div>
                 <div class="notif-text">
-                    <strong>Actualización Exitosa</strong>
-                    <span>Fondos dinámicos arreglados, botón de guardado automático y Dock Azul ATM activado.</span>
+                    <strong>Sistema Estable</strong>
+                    <span>Efectos gráficos optimizados para Android. Los enlaces utilizan HTML estricto para conectar con las Apps instaladas.</span>
                 </div>
             </div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-link"></i></div>
-                <div class="notif-text"><strong>Apertura Nativa PWA</strong><span>Los enlaces usan HTML nativo para abrir las apps independientemente de forma limpia.</span></div>
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-wrench"></i></div>
+                <div class="notif-text"><strong>Actualización</strong><span>Botón de guardar inteligente y Dock rediseñado al color del club.</span></div>
             </div>
         </div>
 
@@ -309,9 +310,9 @@
         </div>
 
         <div class="quick-actions">
-            <a href="https://www.rffm.es" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
-            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
-            <a href="https://outlook.office.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+            <a href="https://www.rffm.es" target="_blank" rel="external noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" target="_blank" rel="external noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" target="_blank" rel="external noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
         </div>
 
         <div class="news-ticker-container" id="news-ticker-wrapper">
@@ -373,73 +374,73 @@
     </div>
 
     <div class="app-grid" id="apps-container">
-        <a href="https://atm-app.github.io/Partidos-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Partidos-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
             <h2 class="app-title">Partidos ATM</h2>
             <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
             <h2 class="app-title">Partidos GuardianLab</h2>
             <p>Seguimiento de partidos en vivo específico para porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ATM-Keepers-360-/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
             <h2 class="app-title">ATM Keepers 360</h2>
             <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
             <h2 class="app-title">AgendaKeepers</h2>
             <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
             <h2 class="app-title">ADN Keeper</h2>
             <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
             <h2 class="app-title">Insignias Guardianes</h2>
             <p>Juego por puntos y obtención de insignias de rendimiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
             <h2 class="app-title">Informes y Objetivos</h2>
             <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Trivial-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Trivial-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
             <h2 class="app-title">Trivial ATM</h2>
             <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
             <h2 class="app-title">Asistencia Keepers</h2>
             <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
             <h2 class="app-title">GK Jornadas ATM</h2>
             <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
             <h2 class="app-title">Jornadas Competición</h2>
             <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="#" target="_blank" rel="noopener noreferrer" class="card sound-click">
+        <a href="#" target="_blank" rel="external noopener noreferrer" class="card sound-click">
             <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
             <h2 class="app-title">Portal ATM</h2>
             <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
@@ -563,10 +564,10 @@
         ];
 
         const defaultTickerMessages = [
-            "⚠️ Recordatorio: Subir las sesiones a Keepers 360 antes del viernes.",
-            "📋 Control de Asistencia: Comprobar bajas de porteros.",
-            "🎯 Foco Táctico de hoy: Reflejos y transición.",
-            "🏆 Siguiente partido a la vista. ¡Aúpa Atleti!"
+            "⚠️ Recordatorio: Subir las sesiones de entrenamiento a Keepers 360 antes del viernes.",
+            "📋 Control de Asistencia: Comprobar bajas de porteros para el partido del fin de semana.",
+            "🎯 Foco Táctico de hoy: Trabajo de reflejos y transición defensa-ataque.",
+            "🏆 Siguiente partido a la vista. ¡A preparar el choque! Aúpa Atleti."
         ];
 
         let savedDockApps = JSON.parse(localStorage.getItem('atmDockApps')) || ["guardian", "agenda", "partidos"];
@@ -583,7 +584,7 @@
                     const a = document.createElement('a');
                     a.href = app.url; 
                     a.target = "_blank"; 
-                    a.rel = "noopener noreferrer"; 
+                    a.rel = "external noopener noreferrer"; 
                     a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
                     a.setAttribute('data-tooltip', app.title); 
                     a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
@@ -619,7 +620,7 @@
             renderModalGrid(); 
             dockElement.style.display = 'none'; 
             dockModal.classList.add('active');
-            saveDockBtn.disabled = true; // Inicia deshabilitado
+            saveDockBtn.disabled = true; // Inicia desactivado
         });
         
         document.getElementById('close-modal-btn').addEventListener('click', () => {
@@ -627,7 +628,7 @@
             dockElement.style.display = ''; 
         });
 
-        // ACTIVAR BOTÓN DE GUARDAR AL ESCRIBIR EN EL TICKER
+        // Activa el botón al escribir en la caja de texto
         tickerTextArea.addEventListener('input', () => {
             if (tempSelection.length === 3) {
                 saveDockBtn.disabled = false;
@@ -746,6 +747,7 @@
             }, 1000);
         }
         startMatchTimer();
+
 
         /* =========================================
            RESTO DE LÓGICA (CLIMA, RELOJ, ETC.)
