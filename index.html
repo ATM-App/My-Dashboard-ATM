@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#CB3524">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Dashboard ATM">
+    
+    <link rel="icon" type="image/png" href="Atletico_Madrid.png">
+    <link rel="apple-touch-icon" href="Atletico_Madrid.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>My Dashboard | ATM</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VARIABLES iOS / VISION OS --- */
+        :root {
+            --atm-red: #CB3524;
+            --atm-blue: #003D99;
+            
+            /* MODO DÍA */
+            --bg-color: #F2F2F7; 
+            --text-main: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(255, 255, 255, 0.6);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --btn-bg: rgba(0, 122, 255, 0.1);
+            --btn-text: #007AFF;
+            --active-day: #CB3524;
+            --glass-panel: rgba(255, 255, 255, 0.85);
+            --dock-bg: rgba(45, 55, 72, 0.85); 
+        }
+
+        /* MODO NOCHE */
+        [data-theme="dark"] {
+            --bg-color: #000000; 
+            --text-main: #FFFFFF; 
+            --text-secondary: #98989D; 
+            --card-bg: rgba(28, 28, 30, 0.65);
+            --card-border: rgba(255, 255, 255, 0.15); 
+            --shadow-color: rgba(0, 0, 0, 0.6);
+            --btn-bg: rgba(255, 255, 255, 0.15);
+            --btn-text: #FFFFFF;
+            --active-day: #CB3524;
+            --glass-panel: rgba(28, 28, 30, 0.85);
+            --dock-bg: rgba(30, 35, 45, 0.85);
+        }
+
+        /* Degradados Premium Apps */
+        .grad-red { background: linear-gradient(135deg, #FF3B30, #FF453A); }
+        .grad-blue { background: linear-gradient(135deg, #007AFF, #0A84FF); }
+        .grad-green { background: linear-gradient(135deg, #34C759, #30D158); }
+        .grad-orange { background: linear-gradient(135deg, #FF9500, #FF9F0A); }
+        .grad-purple { background: linear-gradient(135deg, #AF52DE, #BF5AF2); }
+        .grad-gold { background: linear-gradient(135deg, #D4AF37, #F4C430); }
+        .grad-cyan { background: linear-gradient(135deg, #32ADE6, #64D2FF); }
+        .grad-indigo { background: linear-gradient(135deg, #5856D6, #5E5CE6); }
+        .grad-pink { background: linear-gradient(135deg, #FF2D55, #FF375F); }
+        .grad-teal { background: linear-gradient(135deg, #00C7BE, #63E6E2); }
+        .grad-dark { background: linear-gradient(135deg, #8E8E93, #48484A); }
+        .grad-atm { background: linear-gradient(135deg, var(--atm-blue), var(--atm-red)); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Titillium Web', sans-serif;
+            background-color: var(--bg-color); color: var(--text-main);
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+            transition: all 0.4s ease;
+            background-image: radial-gradient(circle at 15% 50%, rgba(203, 53, 36, 0.15), transparent 50%),
+                              radial-gradient(circle at 85% 30%, rgba(0, 61, 153, 0.12), transparent 50%);
+            overflow-x: hidden; 
+            padding-right: 90px; 
+            position: relative;
+        }
+
+        /* 🌟 FONDOS DINÁMICOS INTELIGENTES */
+        body.weather-sun::before { content: ''; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(255, 204, 0, 0.15) 0%, transparent 60%); z-index: -1; animation: pulseSun 8s infinite alternate ease-in-out; pointer-events: none; }
+        @keyframes pulseSun { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.1); opacity: 1; } }
+
+        body.weather-rain::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(to bottom, rgba(100,150,255,0) 0%, rgba(100,150,255,0.15) 50%, rgba(100,150,255,0) 100%); background-size: 20px 150px; animation: rainFall 0.8s linear infinite; z-index: -1; pointer-events: none; }
+        [data-theme="dark"] body.weather-rain::before { opacity: 0.4; }
+        @keyframes rainFall { 0% { background-position: 0 0; } 100% { background-position: 10px 100vh; } }
+
+        body.weather-night::before { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 150px 80px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 80px 160px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1.5px 1.5px at 290px 40px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 350px 210px, rgba(255,255,255,0.6), rgba(0,0,0,0)); background-repeat: repeat; background-size: 400px 400px; animation: twinkleStars 5s infinite alternate; z-index: -1; pointer-events: none; opacity: 0.6; }
+        @keyframes twinkleStars { 0% { opacity: 0.3; } 100% { opacity: 0.8; } }
+
+        /* --- HEADER & NOTIFICACIONES --- */
+        header { text-align: center; padding: 50px 20px 10px; width: 100%; max-width: 1200px; position: relative; }
+        .atm-logo { width: 110px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: floatLogo 6s ease-in-out infinite; }
+        h1 { font-weight: 800; font-size: 2.4rem; margin-bottom: 5px; letter-spacing: -1px; }
+        .greeting-msg { font-size: 0.95rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px; }
+
+        .header-buttons { position: absolute; top: 25px; right: 25px; display: flex; gap: 10px; z-index: 1000; }
+        .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; position: relative; backdrop-filter: blur(30px); display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow-color); }
+        .icon-btn:hover { transform: scale(1.1); }
+        #install-btn { display: none; }
+        .badge { position: absolute; top: -2px; right: -2px; background: #FF3B30; color: white; font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-color); }
+
+        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
+        #notif-panel.active { right: 25px; opacity: 1; }
+        .notif-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
+        .notif-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; font-size: 0.85rem; }
+        .notif-icon { font-size: 1.3rem; color: var(--atm-red); }
+        .notif-text strong { display: block; color: var(--text-main); font-size: 0.9rem; margin-bottom: 3px;}
+        .notif-text span { color: var(--text-secondary); line-height: 1.4;}
+
+        /* --- ACCESOS RÁPIDOS --- */
+        .quick-actions { display: flex; justify-content: center; gap: 30px; margin-bottom: 25px; }
+        .action-link { color: var(--text-secondary); text-decoration: none; font-size: 0.75rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
+        .action-link i.icon-box { width: 54px; height: 54px; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; border-radius: 26%; font-size: 1.4rem; box-shadow: 0 8px 16px var(--shadow-color); color: var(--text-main); transition: 0.3s; backdrop-filter: blur(20px); }
+        .action-link:hover i.icon-box { transform: translateY(-4px) scale(1.05); color: var(--atm-red); border-color: var(--atm-red); }
+
+        /* 📰 NEWS TICKER (ÚLTIMA HORA) */
+        #news-ticker-wrapper { width: 100%; max-width: 900px; margin: 0 auto 30px; background: var(--card-bg); backdrop-filter: blur(30px) saturate(200%); border: 1px solid var(--card-border); border-radius: 14px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 8px 20px var(--shadow-color); position: relative; }
+        .ticker-badge { background: var(--atm-red); color: white; font-weight: 800; font-size: 0.75rem; padding: 12px 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 2; box-shadow: 4px 0 15px rgba(0,0,0,0.2); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+        .ticker-badge i { animation: pulseFlash 1.5s infinite alternate; }
+        @keyframes pulseFlash { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+        .ticker-wrap { flex-grow: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; }
+        .ticker-move { display: inline-block; padding-left: 100%; animation: tickerScroll 25s linear infinite; }
+        .ticker-move:hover { animation-play-state: paused; cursor: pointer; }
+        .ticker-item { display: inline-block; margin-right: 60px; font-size: 0.95rem; font-weight: 600; color: var(--text-main); letter-spacing: 0.3px; }
+        .ticker-item i { color: var(--atm-blue); margin-right: 8px; font-size: 0.9em; }
+        @keyframes tickerScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+        /* --- SPOTLIGHT SEARCH --- */
+        .spotlight-container { width: 100%; max-width: 600px; margin: 0 auto 30px; position: relative; padding: 0 20px; z-index: 50; }
+        .spotlight-input { width: 100%; padding: 18px 20px 18px 50px; font-size: 1rem; font-family: 'Titillium Web', sans-serif; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-main); backdrop-filter: blur(30px); outline: none; box-shadow: 0 8px 20px var(--shadow-color); transition: 0.3s; }
+        .spotlight-input::placeholder { color: var(--text-secondary); font-weight: 600; }
+        .spotlight-input:focus { border-color: var(--atm-blue); box-shadow: 0 10px 30px rgba(0, 61, 153, 0.2); }
+        .spotlight-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.2rem; }
+
+        /* --- WIDGETS --- */
+        .info-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; padding: 0 20px; margin-bottom: 30px; perspective: 1000px; }
+        
+        .info-card { background: var(--card-bg); border-radius: 32px; padding: 25px; backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; transform-style: preserve-3d; transition: transform 0.3s ease; position: relative;}
+        .info-card:not(.flip-container):hover { transform: translateY(-3px); }
+        .info-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); font-weight: 700; transform: translateZ(20px); width: 100%; }
+
+        .weather-row { display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; transform: translateZ(30px); }
+        .weather-temp { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; }
+        .digital-clock-container { text-align: center; padding-top: 15px; border-top: 1px solid rgba(128,128,128,0.1); transform: translateZ(25px); }
+        .clock-time { font-size: 2.2rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+        .clock-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Widget Reversible */
+        .flip-container { background: transparent; border: none; padding: 0; box-shadow: none; backdrop-filter: none; }
+        .flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; min-height: 220px; }
+        .flip-container.flipped .flipper { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--card-bg); border-radius: 32px; padding: 25px; backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 12px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; }
+        .back { transform: rotateY(180deg); }
+        
+        .header-action-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.1rem; cursor: pointer; transition: 0.2s; padding: 5px; }
+        .header-action-btn:hover { color: var(--atm-red); transform: scale(1.1); }
+        
+        .objective-textarea { width: 100%; flex-grow: 1; resize: none; background: transparent; border: none; outline: none; color: var(--text-main); font-family: inherit; font-size: 1rem; line-height: 1.5; margin-top: 15px; font-weight: 600; }
+        .objective-textarea::placeholder { color: var(--text-secondary); opacity: 0.5; font-weight: 400; }
+
+        .calendar-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; transform: translateZ(25px); }
+        .week-strip { display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px; gap: 4px; }
+        .day-item { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); border-radius: 16px; flex: 1; padding: 10px 0; transition: 0.3s; }
+        [data-theme="dark"] .day-item { background: rgba(255,255,255,0.05); }
+        .day-name { font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); }
+        .day-number { font-size: 1.1rem; font-weight: 800; }
+        .day-item.active { background: var(--active-day); color: white; transform: scale(1.1); box-shadow: 0 5px 15px rgba(203, 53, 36, 0.4); }
+
+        .match-widget { text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; transform: translateZ(30px); }
+        .teams-row { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; }
+        .vs-badge { font-size: 0.8rem; background: var(--atm-red); color: white; padding: 3px 8px; border-radius: 10px; }
+        .countdown { font-size: 2.2rem; font-weight: 800; color: var(--atm-red); font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 5px; }
+        .match-date { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
+
+        /* --- APPS GRID --- */
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; width: 100%; max-width: 1200px; padding: 0 20px 20px; }
+        .card { background: var(--card-bg); border-radius: 32px; padding: 30px 25px; text-decoration: none; color: var(--text-main); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 10px 30px var(--shadow-color); display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
+        .card.hidden { display: none !important; }
+        .card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px -5px var(--shadow-color); }
+        .icon-container { width: 80px; height: 80px; border-radius: 26%; display: flex; align-items: center; justify-content: center; font-size: 34px; color: white; margin-bottom: 18px; transform: translateZ(30px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
+        .card h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; transform: translateZ(20px); letter-spacing: -0.5px; line-height: 1.2;}
+        .card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 25px; transform: translateZ(20px); flex-grow: 1; }
+        .status-btn { padding: 10px 30px; border-radius: 40px; background: var(--btn-bg); color: var(--btn-text); font-weight: 700; font-size: 0.85rem; border: none; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; transform: translateZ(35px); }
+        .card:hover .status-btn { background: var(--btn-text); color: var(--bg-color); }
+
+        .atleti-banner-container { grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 10px; padding-bottom: 40px; }
+        .atleti-banner-img { max-width: 350px; width: 80%; height: auto; border-radius: 12px; box-shadow: 0 10px 25px var(--shadow-color); transition: transform 0.4s ease; }
+        .atleti-banner-img:hover { transform: scale(1.03); }
+
+        /* --- DOCK LATERAL DERECHO --- */
+        .vertical-dock { position: fixed; top: 50%; right: 25px; transform: translateY(-50%); background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; display: flex; flex-direction: column; align-items: center; gap: 25px; box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; }
+        .dock-item { position: relative; color: rgba(255, 255, 255, 0.5); font-size: 1.5rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; cursor: pointer;}
+        .dock-item:not(.main-action):hover { color: #00FF87; transform: scale(1.15); text-shadow: 0 0 15px rgba(0, 255, 135, 0.6); }
+        .dock-item.main-action { width: 65px; height: 65px; background: var(--atm-red); color: white; border-radius: 50%; border: 4px solid white; font-size: 1.8rem; box-shadow: 0 0 25px rgba(203, 53, 36, 0.7), inset 0 0 10px rgba(0,0,0,0.2); margin: 5px 0; z-index: 2; }
+        .dock-item.main-action:hover { transform: scale(1.1) rotate(10deg); border-color: #f3f4f6; text-shadow: none; }
+        .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
+
+        /* --- MODALES --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); transform: scale(0.9); transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto;}
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .modal-header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+        .close-modal { background: transparent; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: 0.2s; }
+        .close-modal:hover { color: var(--atm-red); transform: scale(1.1); }
+        
+        /* Modal Ajustes (Dock & Ticker) */
+        .modal-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
+        .modal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .modal-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; opacity: 0.4; filter: grayscale(80%); transition: 0.3s; }
+        .modal-item:hover { opacity: 0.8; }
+        .modal-item.active { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+        .modal-icon { width: 55px; height: 55px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); position: relative; }
+        .modal-item.active .modal-icon::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -5px; right: -5px; background: #34C759; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border: 2px solid var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .modal-item span { font-size: 0.7rem; font-weight: 700; text-align: center; line-height: 1.1; color: var(--text-main); }
+        
+        .section-divider { border: 0; border-top: 1px solid var(--card-border); margin: 25px 0; }
+        .form-input { width: 100%; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.04); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .form-input:focus { border-color: var(--atm-blue); background: rgba(0,0,0,0.02); }
+        [data-theme="dark"] .form-input { background: rgba(255,255,255,0.05); color: white; }
+
+        .save-btn { width: 100%; padding: 15px; border-radius: 20px; background: var(--atm-red); color: white; border: none; font-weight: 800; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 20px rgba(203, 53, 36, 0.3); transition: 0.3s; }
+        .save-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(203, 53, 36, 0.4); }
+        .save-btn:disabled { background: var(--text-secondary); cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.5; }
+
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .app-grid { grid-template-columns: 1fr; padding-bottom: 80px; }
+            .spotlight-input { padding: 15px 15px 15px 45px; }
+            .spotlight-icon { left: 35px; }
+            .news-ticker-container { padding: 0 10px; }
+            body { padding-right: 0; padding-bottom: 100px; }
+            .vertical-dock { top: auto; bottom: 15px; right: 50%; transform: translateX(50%); flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; }
+            .dock-item { font-size: 1.3rem; }
+            .dock-item.main-action { width: 55px; height: 55px; border-width: 3px; font-size: 1.5rem; }
+            .dock-item::after { display: none; } 
+            .modal-grid { grid-template-columns: repeat(3, 1fr); }
+            .atleti-banner-img { max-width: 250px; }
+            .front, .back { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-buttons">
+            <button id="settings-btn" class="icon-btn sound-click"><i class="fa-solid fa-gear"></i></button>
+            <button id="notif-btn" class="icon-btn sound-click"><i class="fa-solid fa-bell"></i><span class="badge">1</span></button>
+            <button id="install-btn" class="icon-btn sound-click"><i class="fa-solid fa-download"></i></button>
+            <button class="icon-btn sound-flip" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+        </div>
+
+        <div id="notif-panel">
+            <div class="notif-header">Notificaciones Recientes</div>
+            <div class="notif-item">
+                <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-pen-to-square"></i></div>
+                <div class="notif-text">
+                    <strong>Tú tienes el control</strong>
+                    <span>Ahora puedes cambiar los mensajes de Última Hora desde los Ajustes (engranaje superior). Usa Emojis para darle un toque espectacular.</span>
+                </div>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-wrench"></i></div>
+                <div class="notif-text"><strong>Dock Personalizable</strong><span>Puedes configurar tu Dock desde el mismo menú de ajustes.</span></div>
+            </div>
+        </div>
+
+        <img src="Atletico_Madrid.png" alt="ATM" class="atm-logo">
+        <div class="greeting-msg" id="greeting">...</div>
+        <h1>Centro de Operaciones</h1>
+        
+        <div class="spotlight-container">
+            <i class="fa-solid fa-magnifying-glass spotlight-icon"></i>
+            <input type="text" id="spotlight-search" class="spotlight-input" placeholder="Buscar aplicación, herramienta o recurso...">
+        </div>
+
+        <div class="quick-actions">
+            <a href="https://www.rffm.es" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+        </div>
+
+        <div class="news-ticker-container" id="news-ticker-wrapper">
+            <div class="ticker-badge"><i class="fa-solid fa-bolt"></i> ÚLTIMA HORA</div>
+            <div class="ticker-wrap">
+                <div class="ticker-move" id="ticker-messages-container">
+                    </div>
+            </div>
+        </div>
+
+    </header>
+
+    <div class="info-dashboard">
+        <div class="info-card js-tilt" data-tilt-scale="1.02">
+            <div class="info-header">
+                <div><i class="fa-solid fa-location-arrow"></i> <span id="location-name">Detectando...</span></div>
+            </div>
+            <div class="weather-row">
+                <i class="fa-solid fa-spinner fa-spin" id="weather-icon" style="font-size: 2.5rem; color: var(--text-secondary);"></i>
+                <span class="weather-temp" id="weather-temp">--</span>
+            </div>
+            <div class="digital-clock-container"><div class="clock-time" id="digital-clock">00:00:00</div><div class="clock-label">Hora Oficial</div></div>
+        </div>
+
+        <div class="info-card flip-container" id="calendar-widget">
+            <div class="flipper">
+                <div class="front">
+                    <div class="info-header">
+                        <div><i class="fa-regular fa-calendar-check"></i> <span>Microciclo</span></div>
+                        <button class="header-action-btn sound-flip" id="flip-to-back" title="Ver Foco Táctico"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="week-strip" id="weekly-calendar"></div>
+                        <div class="full-date-display" id="full-date-text">...</div>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="info-header">
+                        <div><i class="fa-solid fa-bullseye"></i> <span>Objetivo del Día</span></div>
+                        <button class="header-action-btn sound-flip" id="flip-to-front" title="Volver al Microciclo"><i class="fa-solid fa-rotate-left"></i></button>
+                    </div>
+                    <textarea class="objective-textarea" id="daily-objective" placeholder="Escribe aquí el foco táctico de la sesión (se guarda automáticamente)..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card js-tilt" data-tilt-scale="1.02">
+            <div class="info-header">
+                <div><i class="fa-solid fa-star"></i> <span>Partido Destacado</span></div>
+                <button class="header-action-btn sound-swoosh" id="edit-match-btn" title="Editar Partido"><i class="fa-solid fa-pen"></i></button>
+            </div>
+            <div class="match-widget">
+                <div class="teams-row">
+                    <span id="match-team1">ATM</span> <span class="vs-badge">VS</span> <span id="match-team2">RMA</span>
+                </div>
+                <div class="countdown" id="countdown-timer">--h --m --s</div>
+                <div class="match-date" id="match-date-display">...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-grid" id="apps-container">
+        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
+            <h2 class="app-title">Partidos ATM</h2>
+            <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
+            <h2 class="app-title">Partidos GuardianLab</h2>
+            <p>Seguimiento de partidos en vivo específico para porteros.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
+            <h2 class="app-title">ATM Keepers 360</h2>
+            <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
+            <h2 class="app-title">AgendaKeepers</h2>
+            <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
+            <h2 class="app-title">ADN Keeper</h2>
+            <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
+            <h2 class="app-title">Insignias Guardianes</h2>
+            <p>Juego por puntos y obtención de insignias de rendimiento.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
+            <h2 class="app-title">Informes y Objetivos</h2>
+            <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
+            <h2 class="app-title">Trivial ATM</h2>
+            <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
+            <h2 class="app-title">Asistencia Keepers</h2>
+            <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
+            <h2 class="app-title">GK Jornadas ATM</h2>
+            <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
+            <h2 class="app-title">Jornadas Competición</h2>
+            <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
+            <button class="status-btn">Acceder</button>
+        </a>
+        <a href="#" class="card js-tilt sound-click" target="_blank">
+            <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
+            <h2 class="app-title">Portal ATM</h2>
+            <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
+            <button class="status-btn">Próximamente</button>
+        </a>
+
+        <div class="atleti-banner-container">
+            <img src="atleti-banner.png" alt="ATLETI" class="atleti-banner-img">
+        </div>
+    </div>
+
+    <div class="vertical-dock" id="dock-container"></div>
+
+    <div class="modal-overlay" id="dock-settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Ajustes del Sistema</h2>
+                <button class="close-modal sound-swoosh" id="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <p class="modal-desc" style="margin-bottom: 10px;"><strong>1. Dock de Apps:</strong> Selecciona exactamente 3 aplicaciones. La segunda se colocará en el centro.</p>
+            <div class="modal-grid" id="modal-grid"></div>
+
+            <hr class="section-divider">
+
+            <p class="modal-desc" style="margin-bottom: 10px;"><strong>2. Cinta de Noticias:</strong> Escribe aquí tus mensajes de "Última hora" (un mensaje por línea). Puedes usar Emojis. Si lo dejas vacío, la cinta se ocultará.</p>
+            <textarea id="ticker-input-textarea" class="form-input" style="min-height: 110px; margin-bottom: 25px; resize: vertical;" placeholder="🏆 Partido de copa a la vista&#10;⚠️ Recordatorio de reunión"></textarea>
+
+            <button id="save-dock-btn" class="save-btn sound-click" disabled>Guardar Cambios</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="match-settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Partido</h2>
+                <button class="close-modal sound-swoosh" id="close-match-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="modal-desc">Configura el próximo reto destacado del equipo.</p>
+            <div class="form-group">
+                <label>Equipo Local</label>
+                <input type="text" id="input-team1" class="form-input" placeholder="Ej: ATM" maxlength="4">
+            </div>
+            <div class="form-group">
+                <label>Equipo Visitante</label>
+                <input type="text" id="input-team2" class="form-input" placeholder="Ej: RMA" maxlength="4">
+            </div>
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label>Fecha y Hora</label>
+                <input type="datetime-local" id="input-match-date" class="form-input">
+            </div>
+            <button id="save-match-btn" class="save-btn sound-click">Guardar Partido</button>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================
+           🎧 SINTETIZADOR DE AUDIO WEB (UI SOUNDS)
+           ========================================= */
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) { audioCtx = new AudioContext(); }
+            if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+        }
+
+        function playUISound(type) {
+            if (!audioCtx) initAudio();
+            if (!audioCtx || audioCtx.state !== 'running') return;
+
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if (type === 'click') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+                gainNode.gain.setValueAtTime(0.05, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.start(now); osc.stop(now + 0.04);
+            } 
+            else if (type === 'swoosh') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+                gainNode.gain.setValueAtTime(0, now); gainNode.gain.linearRampToValueAtTime(0.03, now + 0.05); gainNode.gain.linearRampToValueAtTime(0, now + 0.15);
+                osc.start(now); osc.stop(now + 0.15);
+            }
+            else if (type === 'flip') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(200, now + 0.1);
+                gainNode.gain.setValueAtTime(0.08, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            initAudio(); 
+            const target = e.target.closest('.sound-click, .sound-swoosh, .sound-flip');
+            if (target) {
+                if (target.classList.contains('sound-click')) playUISound('click');
+                else if (target.classList.contains('sound-swoosh')) playUISound('swoosh');
+                else if (target.classList.contains('sound-flip')) playUISound('flip');
+            }
+        });
+
+
+        /* =========================================
+           ⚙️ SISTEMA DE AJUSTES (DOCK Y TICKER)
+           ========================================= */
+        const appsData = [
+            { id: "partidos", title: "Partidos", icon: "fa-futbol", color: "grad-atm", url: "https://atm-app.github.io/Partidos-ATM/" },
+            { id: "guardian", title: "GuardianLab", icon: "fa-shield-halved", color: "grad-purple", url: "https://atm-app.github.io/Partidos-GuardianLab-ATM/" },
+            { id: "keepers360", title: "Keepers 360", icon: "fa-arrows-spin", color: "grad-teal", url: "https://atm-app.github.io/ATM-Keepers-360-/" },
+            { id: "agenda", title: "Agenda", icon: "fa-calendar-days", color: "grad-orange", url: "https://atm-app.github.io/AgendaKeepers-ATM/" },
+            { id: "adn", title: "ADN Keeper", icon: "fa-dna", color: "grad-red", url: "https://atm-app.github.io/ADN-Keeper-Methodology/" },
+            { id: "insignias", title: "Insignias", icon: "fa-medal", color: "grad-gold", url: "https://atm-app.github.io/Insignia-Guardianes-ATM/" },
+            { id: "informes", title: "Informes", icon: "fa-file-signature", color: "grad-blue", url: "https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" },
+            { id: "trivial", title: "Trivial", icon: "fa-gamepad", color: "grad-indigo", url: "https://atm-app.github.io/Trivial-ATM/" },
+            { id: "asistencia", title: "Asistencia", icon: "fa-user-xmark", color: "grad-pink", url: "https://atm-app.github.io/AsistenciaKeepers-ATM/" },
+            { id: "gkjornadas", title: "GK Jornadas", icon: "fa-clipboard-check", color: "grad-green", url: "https://atm-app.github.io/GoalKeepers-Jornada-ATM/" },
+            { id: "competicion", title: "Competición", icon: "fa-map-location-dot", color: "grad-cyan", url: "https://atm-app.github.io/Jornada-Competicion-ATM/" },
+            { id: "portal", title: "Portal", icon: "fa-folder-open", color: "grad-dark", url: "#" }
+        ];
+
+        // Mensajes por defecto del Ticker
+        const defaultTickerMessages = [
+            "⚠️ Recordatorio: Subir las sesiones de entrenamiento a Keepers 360 antes del viernes.",
+            "📋 Control de Asistencia: Comprobar bajas de porteros para el partido del fin de semana.",
+            "🎯 Foco Táctico de hoy: Trabajo de reflejos y transición defensa-ataque.",
+            "🏆 Siguiente partido a la vista. ¡A preparar el choque! Aúpa Atleti."
+        ];
+
+        let savedDockApps = JSON.parse(localStorage.getItem('atmDockApps')) || ["guardian", "agenda", "partidos"];
+        let savedTickerMessages = JSON.parse(localStorage.getItem('atmTickerMessages')) || defaultTickerMessages;
+        let tempSelection = [...savedDockApps];
+
+        function renderDock() {
+            const dockContainer = document.getElementById('dock-container');
+            dockContainer.innerHTML = '';
+            savedDockApps.forEach((appId, index) => {
+                const app = appsData.find(a => a.id === appId);
+                if(app) {
+                    const isCenter = index === 1;
+                    const a = document.createElement('a');
+                    a.href = app.url; a.target = "_blank"; a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
+                    a.setAttribute('data-tooltip', app.title); a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
+                    dockContainer.appendChild(a);
+                }
+            });
+        }
+
+        function renderTicker() {
+            const tickerWrapper = document.getElementById('news-ticker-wrapper');
+            const tickerContainer = document.getElementById('ticker-messages-container');
+            tickerContainer.innerHTML = '';
+            
+            if(savedTickerMessages.length === 0) {
+                tickerWrapper.style.display = 'none'; // Ocultar si no hay mensajes
+            } else {
+                tickerWrapper.style.display = 'flex';
+                savedTickerMessages.forEach(msg => {
+                    // Ponemos un icono genérico por si no han usado emojis, para que quede bien formateado
+                    tickerContainer.innerHTML += `<span class="ticker-item"><i class="fa-solid fa-angle-right" style="color: var(--atm-blue); margin-right: 8px;"></i> ${msg}</span>`;
+                });
+            }
+        }
+
+        const dockModal = document.getElementById('dock-settings-modal');
+        const tickerTextArea = document.getElementById('ticker-input-textarea');
+
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            playUISound('swoosh'); 
+            tempSelection = [...savedDockApps]; 
+            tickerTextArea.value = savedTickerMessages.join('\n'); // Cargar mensajes en el textarea
+            renderModalGrid(); 
+            dockModal.classList.add('active');
+        });
+        
+        document.getElementById('close-modal-btn').addEventListener('click', () => dockModal.classList.remove('active'));
+        
+        function renderModalGrid() {
+            const modalGrid = document.getElementById('modal-grid');
+            modalGrid.innerHTML = '';
+            appsData.forEach(app => {
+                const isSelected = tempSelection.includes(app.id);
+                const item = document.createElement('div');
+                item.className = `modal-item ${isSelected ? 'active' : ''}`;
+                item.innerHTML = `<div class="modal-icon ${app.color}"><i class="fa-solid ${app.icon}"></i></div><span>${app.title}</span>`;
+                item.addEventListener('click', () => {
+                    playUISound('click');
+                    if (isSelected) { tempSelection = tempSelection.filter(id => id !== app.id); } 
+                    else { tempSelection.length < 3 ? tempSelection.push(app.id) : (tempSelection.shift(), tempSelection.push(app.id)); }
+                    renderModalGrid();
+                    document.getElementById('save-dock-btn').disabled = tempSelection.length !== 3; 
+                });
+                modalGrid.appendChild(item);
+            });
+        }
+
+        document.getElementById('save-dock-btn').addEventListener('click', () => {
+            if (tempSelection.length === 3) { 
+                // Guardar Dock
+                savedDockApps = [...tempSelection]; 
+                localStorage.setItem('atmDockApps', JSON.stringify(savedDockApps)); 
+                renderDock(); 
+                
+                // Guardar Ticker
+                const lines = tickerTextArea.value.split('\n').filter(line => line.trim() !== '');
+                savedTickerMessages = lines;
+                localStorage.setItem('atmTickerMessages', JSON.stringify(savedTickerMessages));
+                renderTicker();
+
+                dockModal.classList.remove('active'); 
+            }
+        });
+        
+        renderDock();
+        renderTicker();
+
+        /* =========================================
+           WIDGET REVERSIBLE (OBJETIVO DEL DÍA)
+           ========================================= */
+        const flipContainer = document.getElementById('calendar-widget');
+        const objTextarea = document.getElementById('daily-objective');
+        
+        document.getElementById('flip-to-back').addEventListener('click', () => flipContainer.classList.add('flipped'));
+        document.getElementById('flip-to-front').addEventListener('click', () => flipContainer.classList.remove('flipped'));
+        
+        objTextarea.value = localStorage.getItem('atmDailyObjective') || '';
+        objTextarea.addEventListener('input', (e) => localStorage.setItem('atmDailyObjective', e.target.value));
+
+        /* =========================================
+           PARTIDO DESTACADO EDITABLE (CUENTA ATRÁS)
+           ========================================= */
+        let matchTimerId;
+        const matchModal = document.getElementById('match-settings-modal');
+        const team1Input = document.getElementById('input-team1');
+        const team2Input = document.getElementById('input-team2');
+        const dateInput = document.getElementById('input-match-date');
+
+        document.getElementById('edit-match-btn').addEventListener('click', () => {
+            const savedMatch = JSON.parse(localStorage.getItem('atmMatch')) || { t1: "ATM", t2: "RMA", date: "2026-03-28T16:15" };
+            team1Input.value = savedMatch.t1; team2Input.value = savedMatch.t2; dateInput.value = savedMatch.date;
+            matchModal.classList.add('active');
+        });
+
+        document.getElementById('close-match-modal-btn').addEventListener('click', () => matchModal.classList.remove('active'));
+
+        document.getElementById('save-match-btn').addEventListener('click', () => {
+            if(!team1Input.value || !team2Input.value || !dateInput.value) return alert("Rellena todos los campos.");
+            const newMatch = { t1: team1Input.value.toUpperCase(), t2: team2Input.value.toUpperCase(), date: dateInput.value };
+            localStorage.setItem('atmMatch', JSON.stringify(newMatch));
+            matchModal.classList.remove('active');
+            startMatchTimer();
+        });
+
+        function startMatchTimer() {
+            clearInterval(matchTimerId);
+            const savedMatch = JSON.parse(localStorage.getItem('atmMatch')) || { t1: "ATM", t2: "RMA", date: "2026-03-28T16:15" };
+            document.getElementById('match-team1').innerText = savedMatch.t1;
+            document.getElementById('match-team2').innerText = savedMatch.t2;
+            
+            const matchDateObj = new Date(savedMatch.date);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
+            let dateStr = matchDateObj.toLocaleDateString('es-ES', options).replace(',', ' -') + 'h';
+            document.getElementById('match-date-display').innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+            const matchTime = matchDateObj.getTime();
+            
+            matchTimerId = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = matchTime - now;
+
+                if (distance < 0) {
+                    clearInterval(matchTimerId);
+                    document.getElementById("countdown-timer").innerHTML = "¡EN JUEGO!";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const h = hours < 10 ? "0" + hours : hours;
+                const m = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("countdown-timer").innerHTML = days > 0 ? `${days}d ${h}h ${m}m` : `${h}h ${m}m`;
+            }, 1000);
+        }
+        startMatchTimer();
+
+
+        /* =========================================
+           RESTO DE LÓGICA (CLIMA, RELOJ, ETC.)
+           ========================================= */
+
+        const notifBtn = document.getElementById('notif-btn');
+        const notifPanel = document.getElementById('notif-panel');
+        notifBtn.addEventListener('click', () => { 
+            playUISound('swoosh');
+            notifPanel.classList.toggle('active'); 
+            const badge = notifBtn.querySelector('.badge'); 
+            if(badge) badge.style.display = 'none'; 
+        });
+        document.addEventListener('click', (e) => { if (!notifBtn.contains(e.target) && !notifPanel.contains(e.target)) { notifPanel.classList.remove('active'); } });
+
+        const searchInput = document.getElementById('spotlight-search');
+        const cards = document.querySelectorAll('#apps-container .card');
+        searchInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const title = card.querySelector('.app-title').innerText.toLowerCase();
+                const desc = card.querySelector('p').innerText.toLowerCase();
+                if(title.includes(term) || desc.includes(term)) { card.classList.remove('hidden'); } else { card.classList.add('hidden'); }
+            });
+        });
+
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let msg = "Buenas noches, Míster";
+            if (hour >= 6 && hour < 12) msg = "Buenos días, Míster";
+            else if (hour >= 12 && hour < 20) msg = "Buenas tardes, Míster";
+            document.getElementById('greeting').innerText = msg;
+        }
+        setGreeting();
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const htmlElement = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { htmlElement.setAttribute('data-theme', 'dark'); themeIcon.classList.replace('fa-moon', 'fa-sun'); }
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = htmlElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            htmlElement.setAttribute('data-theme', theme);
+            themeIcon.classList.toggle('fa-moon'); themeIcon.classList.toggle('fa-sun');
+            localStorage.setItem('theme', theme);
+        });
+
+        setInterval(() => { document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('es-ES', {hour12: false}); }, 1000);
+
+        function initCalendar() {
+            const calendarEl = document.getElementById('weekly-calendar');
+            const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+            const today = new Date();
+            const diff = today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1);
+            const monday = new Date(today.setDate(diff));
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday); d.setDate(monday.getDate() + i);
+                const isActive = d.toDateString() === new Date().toDateString();
+                calendarEl.innerHTML += `<div class="day-item ${isActive ? 'active' : ''}"><span class="day-name">${days[i]}</span><span class="day-number">${d.getDate()}</span></div>`;
+            }
+            document.getElementById('full-date-text').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+        initCalendar();
+
+        function initWeather() { navigator.geolocation.getCurrentPosition(pos => { getWeather(pos.coords.latitude, pos.coords.longitude, "Localización"); }, () => getWeather(40.45, -3.86, "Majadahonda")); }
+        async function getWeather(lat, lon, name) {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const data = await res.json();
+                document.getElementById('location-name').innerText = name;
+                document.getElementById('weather-temp').innerText = Math.round(data.current_weather.temperature) + "°";
+                const icon = document.getElementById('weather-icon');
+                const code = data.current_weather.weathercode;
+                const isNight = data.current_weather.is_day === 0;
+                
+                document.body.classList.remove('weather-rain', 'weather-night', 'weather-sun');
+                if (isNight) { document.body.classList.add('weather-night'); } 
+                else if (code <= 1) { document.body.classList.add('weather-sun'); } 
+                else if (code >= 51 && code <= 67 || code >= 80) { document.body.classList.add('weather-rain'); }
+
+                if (code <= 1) { icon.className = isNight ? 'fa-solid fa-moon' : 'fa-solid fa-sun'; icon.style.color = isNight ? '#8E8E93' : '#FFCC00'; }
+                else if (code <= 3) { icon.className = isNight ? 'fa-solid fa-cloud-moon' : 'fa-solid fa-cloud-sun'; icon.style.color = '#8E8E93'; }
+                else if (code <= 67) { icon.className = 'fa-solid fa-cloud-rain'; icon.style.color = '#5AC8FA'; }
+                else if (code <= 99) { icon.className = 'fa-solid fa-cloud-bolt'; icon.style.color = '#007AFF'; }
+                else { icon.className = 'fa-solid fa-cloud'; icon.style.color = '#8E8E93'; }
+            } catch(e) { console.log("Clima no disponible"); }
+        }
+        initWeather();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script> VanillaTilt.init(document.querySelectorAll(".js-tilt"), { max: 5, speed: 500, glare: true, "max-glare": 0.15, perspective: 1200 }); </script>
+</body>
+</html>
