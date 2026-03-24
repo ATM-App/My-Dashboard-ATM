@@ -103,7 +103,7 @@
         .icon-btn:hover { transform: scale(1.1); }
         .badge { position: absolute; top: -2px; right: -2px; background: #FF3B30; color: white; font-size: 0.6rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-color); }
 
-        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
+        #notif-panel { position: fixed; top: 80px; right: -350px; width: 330px; background: var(--glass-panel); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); padding: 20px; z-index: 999; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; overflow-y: auto; max-height: 80vh; }
         #notif-panel.active { right: 25px; opacity: 1; }
         .notif-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; }
         .notif-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; font-size: 0.85rem; }
@@ -171,7 +171,8 @@
         .day-item.active { background: var(--active-day); color: white; transform: scale(1.1); box-shadow: 0 5px 15px rgba(203, 53, 36, 0.4); }
 
         .match-widget { text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .teams-row { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; }
+        /* AJUSTE PARA NOMBRES LARGOS DE EQUIPOS */
+        .teams-row { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 1.3rem; font-weight: 900; margin-bottom: 10px; flex-wrap: wrap; text-align: center; }
         .vs-badge { font-size: 0.8rem; background: var(--atm-red); color: white; padding: 3px 8px; border-radius: 10px; }
         .countdown { font-size: 2.2rem; font-weight: 800; color: var(--atm-red); font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 5px; }
         .match-date { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
@@ -290,12 +291,12 @@
                 <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-check-circle"></i></div>
                 <div class="notif-text">
                     <strong>Sistema Estable</strong>
-                    <span>Se han borrado todos los efectos 3D que colapsaban la tablet. Las apps ahora abren en ventana externa de forma nativa.</span>
+                    <span>Se ha borrado el motor 3D que colapsaba tu tablet. Ahora los enlaces usan HTML nativo para abrir las apps independientes.</span>
                 </div>
             </div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-volume-high"></i></div>
-                <div class="notif-text"><strong>Experiencia Sensorial</strong><span>Sonidos táctiles activados.</span></div>
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-link"></i></div>
+                <div class="notif-text"><strong>Apertura Nativa PWA</strong><span>Los enlaces ahora te sacan a ventanas externas nativas.</span></div>
             </div>
         </div>
 
@@ -481,11 +482,11 @@
             <p class="modal-desc">Configura el próximo reto destacado del equipo.</p>
             <div class="form-group">
                 <label>Equipo Local</label>
-                <input type="text" id="input-team1" class="form-input" placeholder="Ej: ATM" maxlength="4">
+                <input type="text" id="input-team1" class="form-input" placeholder="Ej: Atlético de Madrid" maxlength="20">
             </div>
             <div class="form-group">
                 <label>Equipo Visitante</label>
-                <input type="text" id="input-team2" class="form-input" placeholder="Ej: RMA" maxlength="4">
+                <input type="text" id="input-team2" class="form-input" placeholder="Ej: Real Madrid" maxlength="20">
             </div>
             <div class="form-group" style="margin-bottom: 25px;">
                 <label>Fecha y Hora</label>
@@ -616,7 +617,7 @@
             tempSelection = [...savedDockApps]; 
             tickerTextArea.value = savedTickerMessages.join('\n'); 
             renderModalGrid(); 
-            dockElement.style.display = 'none'; /* Evitar pantallazos GPU en tablet */
+            dockElement.style.display = 'none'; 
             dockModal.classList.add('active');
         });
         
@@ -737,6 +738,7 @@
             }, 1000);
         }
         startMatchTimer();
+
 
         /* =========================================
            RESTO DE LÓGICA (CLIMA, RELOJ, ETC.)
