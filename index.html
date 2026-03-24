@@ -192,15 +192,17 @@
         .atleti-banner-img { max-width: 350px; width: 80%; height: auto; border-radius: 12px; box-shadow: 0 10px 25px var(--shadow-color); transition: transform 0.4s ease; }
         .atleti-banner-img:hover { transform: scale(1.03); }
 
-        /* --- DOCK LATERAL DERECHO (CORREGIDO PANTALLAZOS) --- */
+        /* --- DOCK LATERAL DERECHO --- */
+        /* FIX TABLET: Se ha añadido translate3d para forzar renderizado en hardware y evitar Z-Fighting */
         .vertical-dock { 
             position: fixed; top: 50%; right: 25px; 
-            transform: translateY(-50%) translateZ(0); /* Hardware accel para separar capas */
-            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%); 
+            -webkit-transform: translateY(-50%) translate3d(0,0,0);
+            transform: translateY(-50%) translate3d(0,0,0);
+            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; 
             display: flex; flex-direction: column; align-items: center; gap: 25px; 
             box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; 
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
         }
         .dock-item { position: relative; color: rgba(255, 255, 255, 0.5); font-size: 1.5rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; cursor: pointer;}
         .dock-item:not(.main-action):hover { color: #00FF87; transform: scale(1.15); text-shadow: 0 0 15px rgba(0, 255, 135, 0.6); }
@@ -209,24 +211,29 @@
         .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: opacity 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
         .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
 
-        /* --- MODALES (CORREGIDOS PANTALLAZOS GPU) --- */
+        /* --- MODALES (CORREGIDO BUG PANTALLAZO EN TABLET) --- */
+        /* FIX TABLET: Se quita el blur del overlay y se fuerza hardware accel */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); /* Sin Blur problemático */
-            z-index: 2000; display: flex; align-items: center; justify-content: center; 
+            background: rgba(0,0,0,0.85); /* Sin blur */
+            z-index: 9999; display: flex; align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; pointer-events: none; 
             transition: opacity 0.3s ease, visibility 0.3s ease; 
+            -webkit-transform: translate3d(0,0,0); transform: translate3d(0,0,0);
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
             will-change: opacity;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { 
             background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; 
             width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            -webkit-transform: scale(0.95); transform: scale(0.95); 
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             max-height: 90vh; overflow-y: auto; 
-            backface-visibility: hidden; -webkit-backface-visibility: hidden; will-change: transform;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden; 
+            will-change: transform;
         }
-        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-overlay.active .modal-content { -webkit-transform: scale(1); transform: scale(1); }
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .modal-header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
@@ -262,7 +269,12 @@
             .spotlight-icon { left: 35px; }
             .news-ticker-container { padding: 0 10px; }
             body { padding-right: 0; padding-bottom: 100px; }
-            .vertical-dock { top: auto; bottom: 15px; right: 50%; transform: translateX(50%) translateZ(0); flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; }
+            .vertical-dock { 
+                top: auto; bottom: 15px; right: 50%; 
+                -webkit-transform: translateX(50%) translate3d(0,0,0);
+                transform: translateX(50%) translate3d(0,0,0);
+                flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; 
+            }
             .dock-item { font-size: 1.3rem; }
             .dock-item.main-action { width: 55px; height: 55px; border-width: 3px; font-size: 1.5rem; }
             .dock-item::after { display: none; } 
@@ -307,9 +319,9 @@
         </div>
 
         <div class="quick-actions">
-            <a href="https://www.rffm.es" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
-            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
-            <a href="https://outlook.office.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+            <a href="https://www.rffm.es" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" class="action-link sound-click pwa-link"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
         </div>
 
         <div class="news-ticker-container" id="news-ticker-wrapper">
@@ -372,73 +384,73 @@
     </div>
 
     <div class="app-grid" id="apps-container">
-        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
             <h2 class="app-title">Partidos ATM</h2>
             <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
             <h2 class="app-title">Partidos GuardianLab</h2>
             <p>Seguimiento de partidos en vivo específico para porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
             <h2 class="app-title">ATM Keepers 360</h2>
             <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
             <h2 class="app-title">AgendaKeepers</h2>
             <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
             <h2 class="app-title">ADN Keeper</h2>
             <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
             <h2 class="app-title">Insignias Guardianes</h2>
             <p>Juego por puntos y obtención de insignias de rendimiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
             <h2 class="app-title">Informes y Objetivos</h2>
             <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
             <h2 class="app-title">Trivial ATM</h2>
             <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
             <h2 class="app-title">Asistencia Keepers</h2>
             <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
             <h2 class="app-title">GK Jornadas ATM</h2>
             <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
             <h2 class="app-title">Jornadas Competición</h2>
             <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="#" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
+        <a href="#" class="card js-tilt sound-click pwa-link">
             <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
             <h2 class="app-title">Portal ATM</h2>
             <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
@@ -495,6 +507,23 @@
     </div>
 
     <script>
+        /* =========================================
+           🚀 LANZADOR DE APPS PWA (CORREGIDO PARA TABLET)
+           ========================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            const pwaLinks = document.querySelectorAll('.pwa-link');
+            pwaLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+                    if (url && url !== '#') {
+                        // Fuerza al sistema operativo (Android/iOS) a tratarlo como una app popup/standalone
+                        window.open(url, '_blank', 'popup=yes,noopener,noreferrer');
+                    }
+                });
+            });
+        });
+
         /* =========================================
            🎧 SINTETIZADOR DE AUDIO WEB (UI SOUNDS)
            ========================================= */
@@ -581,11 +610,16 @@
                     const isCenter = index === 1;
                     const a = document.createElement('a');
                     a.href = app.url; 
-                    a.target = "_blank"; 
-                    a.rel = "noopener noreferrer";
-                    a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
+                    a.className = `dock-item sound-click pwa-link ${isCenter ? 'main-action' : ''}`;
                     a.setAttribute('data-tooltip', app.title); 
                     a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
+                    
+                    // Interceptar clics en el Dock para ventana PWA
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if(app.url !== '#') window.open(app.url, '_blank', 'popup=yes,noopener,noreferrer');
+                    });
+                    
                     dockContainer.appendChild(a);
                 }
             });
@@ -725,7 +759,6 @@
             }, 1000);
         }
         startMatchTimer();
-
 
         /* =========================================
            RESTO DE LÓGICA (CLIMA, RELOJ, ETC.)
