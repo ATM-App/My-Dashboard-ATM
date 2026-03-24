@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#CB3524">
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="My Dashboard ATM">
-    
     <link rel="icon" type="image/png" href="Atletico_Madrid.png">
     <link rel="apple-touch-icon" href="Atletico_Madrid.png">
     <link rel="manifest" href="manifest.json">
@@ -201,8 +197,14 @@
         .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
         .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
 
-        /* --- MODALES --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s ease; }
+        /* --- MODALES (CORREGIDOS PARA EVITAR EFECTOS RAROS) --- */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); /* Oscurecido, SIN BLUR para evitar bugs de GPU */
+            z-index: 2000; display: flex; align-items: center; justify-content: center; 
+            opacity: 0; pointer-events: none; transition: 0.3s ease; 
+            transform: translateZ(0); /* Aceleración hardware */
+        }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); transform: scale(0.9); transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto;}
         .modal-overlay.active .modal-content { transform: scale(1); }
@@ -263,15 +265,15 @@
         <div id="notif-panel">
             <div class="notif-header">Notificaciones Recientes</div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-pen-to-square"></i></div>
+                <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-wrench"></i></div>
                 <div class="notif-text">
-                    <strong>Tú tienes el control</strong>
-                    <span>Ahora puedes cambiar los mensajes de Última Hora desde los Ajustes (engranaje superior). Usa Emojis para darle un toque espectacular.</span>
+                    <strong>Rendimiento Optimizado</strong>
+                    <span>Se ha corregido el parpadeo gráfico al abrir los ajustes y ahora los enlaces te llevarán directamente a las Apps instaladas (PWA).</span>
                 </div>
             </div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-wrench"></i></div>
-                <div class="notif-text"><strong>Dock Personalizable</strong><span>Puedes configurar tu Dock desde el mismo menú de ajustes.</span></div>
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="notif-text"><strong>Experiencia Sensorial</strong><span>Sube el volumen y disfruta de los sonidos táctiles de sistema.</span></div>
             </div>
         </div>
 
@@ -285,9 +287,9 @@
         </div>
 
         <div class="quick-actions">
-            <a href="https://www.rffm.es" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
-            <a href="https://drive.google.com" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
-            <a href="https://outlook.office.com" target="_blank" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
+            <a href="https://www.rffm.es" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-trophy"></i></i>RFFM</a>
+            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-brands fa-google-drive"></i></i>Nube</a>
+            <a href="https://outlook.office.com" target="_blank" rel="noopener noreferrer" class="action-link sound-click"><i class="icon-box"><i class="fa-solid fa-envelope"></i></i>Email</a>
         </div>
 
         <div class="news-ticker-container" id="news-ticker-wrapper">
@@ -350,73 +352,73 @@
     </div>
 
     <div class="app-grid" id="apps-container">
-        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Partidos-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-atm"><i class="fa-solid fa-futbol"></i></div>
             <h2 class="app-title">Partidos ATM</h2>
             <p>Seguimiento de partidos en vivo y resultados del equipo.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Partidos-GuardianLab-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-purple"><i class="fa-solid fa-shield-halved"></i></div>
             <h2 class="app-title">Partidos GuardianLab</h2>
             <p>Seguimiento de partidos en vivo específico para porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/ATM-Keepers-360-/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-teal"><i class="fa-solid fa-arrows-spin"></i></div>
             <h2 class="app-title">ATM Keepers 360</h2>
             <p>Sube, gestiona y visualiza sesiones de entrenamiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/AgendaKeepers-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-orange"><i class="fa-solid fa-calendar-days"></i></div>
             <h2 class="app-title">AgendaKeepers</h2>
             <p>Agenda personal: entrenamientos, partidos y reuniones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/ADN-Keeper-Methodology/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-red"><i class="fa-solid fa-dna"></i></div>
             <h2 class="app-title">ADN Keeper</h2>
             <p>"Construyendo porteros, creando identidad". Base metodológica.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Insignia-Guardianes-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-gold"><i class="fa-solid fa-medal"></i></div>
             <h2 class="app-title">Insignias Guardianes</h2>
             <p>Juego por puntos y obtención de insignias de rendimiento.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Informes-y-Objetivos-GuardianLab/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-blue"><i class="fa-solid fa-file-signature"></i></div>
             <h2 class="app-title">Informes y Objetivos</h2>
             <p>Informes de evaluación y seguimiento de objetivos de los porteros.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Trivial-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-indigo"><i class="fa-solid fa-gamepad"></i></div>
             <h2 class="app-title">Trivial ATM</h2>
             <p>Juego trivial de banderas, historia y equipos de fútbol.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/AsistenciaKeepers-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-pink"><i class="fa-solid fa-user-xmark"></i></div>
             <h2 class="app-title">Asistencia Keepers</h2>
             <p>Control y seguimiento de ausencias de porteros en las sesiones.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/GoalKeepers-Jornada-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-green"><i class="fa-solid fa-clipboard-check"></i></div>
             <h2 class="app-title">GK Jornadas ATM</h2>
             <p>Reporte de disponibilidad y estado de porteros para la jornada.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click" target="_blank">
+        <a href="https://atm-app.github.io/Jornada-Competicion-ATM/" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-cyan"><i class="fa-solid fa-map-location-dot"></i></div>
             <h2 class="app-title">Jornadas Competición</h2>
             <p>Planificación de partidos: rival, campo, árbitros y logística.</p>
             <button class="status-btn">Acceder</button>
         </a>
-        <a href="#" class="card js-tilt sound-click" target="_blank">
+        <a href="#" class="card js-tilt sound-click" target="_blank" rel="noopener noreferrer">
             <div class="icon-container grad-dark"><i class="fa-solid fa-folder-open"></i></div>
             <h2 class="app-title">Portal ATM</h2>
             <p>Biblioteca colaborativa de tareas de entrenamiento.</p>
@@ -521,7 +523,6 @@
             }
         });
 
-
         /* =========================================
            ⚙️ SISTEMA DE AJUSTES (DOCK Y TICKER)
            ========================================= */
@@ -540,7 +541,6 @@
             { id: "portal", title: "Portal", icon: "fa-folder-open", color: "grad-dark", url: "#" }
         ];
 
-        // Mensajes por defecto del Ticker
         const defaultTickerMessages = [
             "⚠️ Recordatorio: Subir las sesiones de entrenamiento a Keepers 360 antes del viernes.",
             "📋 Control de Asistencia: Comprobar bajas de porteros para el partido del fin de semana.",
@@ -560,8 +560,12 @@
                 if(app) {
                     const isCenter = index === 1;
                     const a = document.createElement('a');
-                    a.href = app.url; a.target = "_blank"; a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
-                    a.setAttribute('data-tooltip', app.title); a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
+                    a.href = app.url; 
+                    a.target = "_blank"; 
+                    a.rel = "noopener noreferrer"; /* SEGURO PARA PWA */
+                    a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
+                    a.setAttribute('data-tooltip', app.title); 
+                    a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
                     dockContainer.appendChild(a);
                 }
             });
@@ -573,11 +577,10 @@
             tickerContainer.innerHTML = '';
             
             if(savedTickerMessages.length === 0) {
-                tickerWrapper.style.display = 'none'; // Ocultar si no hay mensajes
+                tickerWrapper.style.display = 'none';
             } else {
                 tickerWrapper.style.display = 'flex';
                 savedTickerMessages.forEach(msg => {
-                    // Ponemos un icono genérico por si no han usado emojis, para que quede bien formateado
                     tickerContainer.innerHTML += `<span class="ticker-item"><i class="fa-solid fa-angle-right" style="color: var(--atm-blue); margin-right: 8px;"></i> ${msg}</span>`;
                 });
             }
@@ -589,7 +592,7 @@
         document.getElementById('settings-btn').addEventListener('click', () => {
             playUISound('swoosh'); 
             tempSelection = [...savedDockApps]; 
-            tickerTextArea.value = savedTickerMessages.join('\n'); // Cargar mensajes en el textarea
+            tickerTextArea.value = savedTickerMessages.join('\n'); 
             renderModalGrid(); 
             dockModal.classList.add('active');
         });
@@ -617,12 +620,10 @@
 
         document.getElementById('save-dock-btn').addEventListener('click', () => {
             if (tempSelection.length === 3) { 
-                // Guardar Dock
                 savedDockApps = [...tempSelection]; 
                 localStorage.setItem('atmDockApps', JSON.stringify(savedDockApps)); 
                 renderDock(); 
                 
-                // Guardar Ticker
                 const lines = tickerTextArea.value.split('\n').filter(line => line.trim() !== '');
                 savedTickerMessages = lines;
                 localStorage.setItem('atmTickerMessages', JSON.stringify(savedTickerMessages));
