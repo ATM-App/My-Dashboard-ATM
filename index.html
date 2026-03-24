@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#CB3524">
     
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Dashboard ATM">
+    
     <link rel="icon" type="image/png" href="Atletico_Madrid.png">
     <link rel="apple-touch-icon" href="Atletico_Madrid.png">
     <link rel="manifest" href="manifest.json">
@@ -69,7 +73,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Titillium Web', sans-serif;
             background-color: var(--bg-color); color: var(--text-main);
             min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-            transition: all 0.4s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
             background-image: radial-gradient(circle at 15% 50%, rgba(203, 53, 36, 0.15), transparent 50%),
                               radial-gradient(circle at 85% 30%, rgba(0, 61, 153, 0.12), transparent 50%);
             overflow-x: hidden; 
@@ -114,7 +118,7 @@
         .action-link i.icon-box { width: 54px; height: 54px; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; border-radius: 26%; font-size: 1.4rem; box-shadow: 0 8px 16px var(--shadow-color); color: var(--text-main); transition: 0.3s; backdrop-filter: blur(20px); }
         .action-link:hover i.icon-box { transform: translateY(-4px) scale(1.05); color: var(--atm-red); border-color: var(--atm-red); }
 
-        /* 📰 NEWS TICKER (ÚLTIMA HORA) */
+        /* 📰 NEWS TICKER */
         #news-ticker-wrapper { width: 100%; max-width: 900px; margin: 0 auto 30px; background: var(--card-bg); backdrop-filter: blur(30px) saturate(200%); border: 1px solid var(--card-border); border-radius: 14px; display: flex; align-items: center; overflow: hidden; box-shadow: 0 8px 20px var(--shadow-color); position: relative; }
         .ticker-badge { background: var(--atm-red); color: white; font-weight: 800; font-size: 0.75rem; padding: 12px 18px; text-transform: uppercase; letter-spacing: 1px; z-index: 2; box-shadow: 4px 0 15px rgba(0,0,0,0.2); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .ticker-badge i { animation: pulseFlash 1.5s infinite alternate; }
@@ -175,7 +179,7 @@
 
         /* --- APPS GRID --- */
         .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; width: 100%; max-width: 1200px; padding: 0 20px 20px; }
-        .card { background: var(--card-bg); border-radius: 32px; padding: 30px 25px; text-decoration: none; color: var(--text-main); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 10px 30px var(--shadow-color); display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
+        .card { background: var(--card-bg); border-radius: 32px; padding: 30px 25px; text-decoration: none; color: var(--text-main); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--card-border); box-shadow: 0 10px 30px var(--shadow-color); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
         .card.hidden { display: none !important; }
         .card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px -5px var(--shadow-color); }
         .icon-container { width: 80px; height: 80px; border-radius: 26%; display: flex; align-items: center; justify-content: center; font-size: 34px; color: white; margin-bottom: 18px; transform: translateZ(30px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); }
@@ -188,35 +192,51 @@
         .atleti-banner-img { max-width: 350px; width: 80%; height: auto; border-radius: 12px; box-shadow: 0 10px 25px var(--shadow-color); transition: transform 0.4s ease; }
         .atleti-banner-img:hover { transform: scale(1.03); }
 
-        /* --- DOCK LATERAL DERECHO --- */
-        .vertical-dock { position: fixed; top: 50%; right: 25px; transform: translateY(-50%); background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; display: flex; flex-direction: column; align-items: center; gap: 25px; box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; }
+        /* --- DOCK LATERAL DERECHO (CORREGIDO PANTALLAZOS) --- */
+        .vertical-dock { 
+            position: fixed; top: 50%; right: 25px; 
+            transform: translateY(-50%) translateZ(0); /* Hardware accel para separar capas */
+            background: var(--dock-bg); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%); 
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 45px; padding: 25px 12px; 
+            display: flex; flex-direction: column; align-items: center; gap: 25px; 
+            box-shadow: -10px 15px 40px rgba(0,0,0,0.3); z-index: 1000; 
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
         .dock-item { position: relative; color: rgba(255, 255, 255, 0.5); font-size: 1.5rem; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; cursor: pointer;}
         .dock-item:not(.main-action):hover { color: #00FF87; transform: scale(1.15); text-shadow: 0 0 15px rgba(0, 255, 135, 0.6); }
         .dock-item.main-action { width: 65px; height: 65px; background: var(--atm-red); color: white; border-radius: 50%; border: 4px solid white; font-size: 1.8rem; box-shadow: 0 0 25px rgba(203, 53, 36, 0.7), inset 0 0 10px rgba(0,0,0,0.2); margin: 5px 0; z-index: 2; }
         .dock-item.main-action:hover { transform: scale(1.1) rotate(10deg); border-color: #f3f4f6; text-shadow: none; }
-        .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .dock-item::after { content: attr(data-tooltip); position: absolute; top: 50%; right: calc(100% + 20px); transform: translateY(-50%) scale(0.8); background: var(--text-main); color: var(--bg-color); font-size: 0.8rem; font-weight: 700; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: opacity 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; white-space: nowrap; transform-origin: right center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
         .dock-item:hover::after { transform: translateY(-50%) scale(1); opacity: 1; }
 
-        /* --- MODALES (CORREGIDOS PARA EVITAR EFECTOS RAROS) --- */
+        /* --- MODALES (CORREGIDOS PANTALLAZOS GPU) --- */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); /* Oscurecido, SIN BLUR para evitar bugs de GPU */
+            background: rgba(0,0,0,0.85); /* Sin Blur problemático */
             z-index: 2000; display: flex; align-items: center; justify-content: center; 
-            opacity: 0; pointer-events: none; transition: 0.3s ease; 
-            transform: translateZ(0); /* Aceleración hardware */
+            opacity: 0; visibility: hidden; pointer-events: none; 
+            transition: opacity 0.3s ease, visibility 0.3s ease; 
+            will-change: opacity;
         }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); transform: scale(0.9); transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); max-height: 90vh; overflow-y: auto;}
+        .modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal-content { 
+            background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 32px; 
+            width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            max-height: 90vh; overflow-y: auto; 
+            backface-visibility: hidden; -webkit-backface-visibility: hidden; will-change: transform;
+        }
         .modal-overlay.active .modal-content { transform: scale(1); }
+        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .modal-header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
-        .close-modal { background: transparent; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: 0.2s; }
+        .close-modal { background: transparent; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s, transform 0.2s; }
         .close-modal:hover { color: var(--atm-red); transform: scale(1.1); }
         
-        /* Modal Ajustes (Dock & Ticker) */
+        /* Modal Ajustes */
         .modal-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
         .modal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
-        .modal-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; opacity: 0.4; filter: grayscale(80%); transition: 0.3s; }
+        .modal-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; opacity: 0.4; filter: grayscale(80%); transition: opacity 0.3s, filter 0.3s, transform 0.3s; }
         .modal-item:hover { opacity: 0.8; }
         .modal-item.active { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
         .modal-icon { width: 55px; height: 55px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); position: relative; }
@@ -228,7 +248,7 @@
         .form-input:focus { border-color: var(--atm-blue); background: rgba(0,0,0,0.02); }
         [data-theme="dark"] .form-input { background: rgba(255,255,255,0.05); color: white; }
 
-        .save-btn { width: 100%; padding: 15px; border-radius: 20px; background: var(--atm-red); color: white; border: none; font-weight: 800; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 20px rgba(203, 53, 36, 0.3); transition: 0.3s; }
+        .save-btn { width: 100%; padding: 15px; border-radius: 20px; background: var(--atm-red); color: white; border: none; font-weight: 800; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 20px rgba(203, 53, 36, 0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .save-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(203, 53, 36, 0.4); }
         .save-btn:disabled { background: var(--text-secondary); cursor: not-allowed; transform: none; box-shadow: none; opacity: 0.5; }
 
@@ -242,7 +262,7 @@
             .spotlight-icon { left: 35px; }
             .news-ticker-container { padding: 0 10px; }
             body { padding-right: 0; padding-bottom: 100px; }
-            .vertical-dock { top: auto; bottom: 15px; right: 50%; transform: translateX(50%); flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; }
+            .vertical-dock { top: auto; bottom: 15px; right: 50%; transform: translateX(50%) translateZ(0); flex-direction: row; padding: 12px 25px; border-radius: 40px; gap: 20px; }
             .dock-item { font-size: 1.3rem; }
             .dock-item.main-action { width: 55px; height: 55px; border-width: 3px; font-size: 1.5rem; }
             .dock-item::after { display: none; } 
@@ -265,15 +285,15 @@
         <div id="notif-panel">
             <div class="notif-header">Notificaciones Recientes</div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-wrench"></i></div>
+                <div class="notif-icon" style="color: #007AFF;"><i class="fa-solid fa-check-circle"></i></div>
                 <div class="notif-text">
                     <strong>Rendimiento Optimizado</strong>
-                    <span>Se ha corregido el parpadeo gráfico al abrir los ajustes y ahora los enlaces te llevarán directamente a las Apps instaladas (PWA).</span>
+                    <span>Se ha corregido el parpadeo gráfico al abrir los ajustes. Ahora todos los enlaces abren como PWA independiente.</span>
                 </div>
             </div>
             <div class="notif-item">
-                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-volume-high"></i></div>
-                <div class="notif-text"><strong>Experiencia Sensorial</strong><span>Sube el volumen y disfruta de los sonidos táctiles de sistema.</span></div>
+                <div class="notif-icon" style="color: #34C759;"><i class="fa-solid fa-wrench"></i></div>
+                <div class="notif-text"><strong>Dock Personalizable</strong><span>Puedes configurar tu Dock desde el mismo menú de ajustes.</span></div>
             </div>
         </div>
 
@@ -296,7 +316,7 @@
             <div class="ticker-badge"><i class="fa-solid fa-bolt"></i> ÚLTIMA HORA</div>
             <div class="ticker-wrap">
                 <div class="ticker-move" id="ticker-messages-container">
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -439,13 +459,13 @@
                 <button class="close-modal sound-swoosh" id="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <p class="modal-desc" style="margin-bottom: 10px;"><strong>1. Dock de Apps:</strong> Selecciona exactamente 3 aplicaciones. La segunda se colocará en el centro.</p>
+            <p class="modal-desc" style="margin-bottom: 10px;"><strong>1. Dock de Apps:</strong> Selecciona exactamente 3 aplicaciones.</p>
             <div class="modal-grid" id="modal-grid"></div>
 
             <hr class="section-divider">
 
-            <p class="modal-desc" style="margin-bottom: 10px;"><strong>2. Cinta de Noticias:</strong> Escribe aquí tus mensajes de "Última hora" (un mensaje por línea). Puedes usar Emojis. Si lo dejas vacío, la cinta se ocultará.</p>
-            <textarea id="ticker-input-textarea" class="form-input" style="min-height: 110px; margin-bottom: 25px; resize: vertical;" placeholder="🏆 Partido de copa a la vista&#10;⚠️ Recordatorio de reunión"></textarea>
+            <p class="modal-desc" style="margin-bottom: 10px;"><strong>2. Cinta de Noticias:</strong> Escribe aquí tus mensajes de "Última hora" (un mensaje por línea). Deja en blanco para ocultar.</p>
+            <textarea id="ticker-input-textarea" class="form-input" style="min-height: 110px; margin-bottom: 25px; resize: vertical;" placeholder="🏆 Partido a la vista&#10;⚠️ Recordatorio..."></textarea>
 
             <button id="save-dock-btn" class="save-btn sound-click" disabled>Guardar Cambios</button>
         </div>
@@ -562,7 +582,7 @@
                     const a = document.createElement('a');
                     a.href = app.url; 
                     a.target = "_blank"; 
-                    a.rel = "noopener noreferrer"; /* SEGURO PARA PWA */
+                    a.rel = "noopener noreferrer";
                     a.className = `dock-item sound-click ${isCenter ? 'main-action' : ''}`;
                     a.setAttribute('data-tooltip', app.title); 
                     a.innerHTML = `<i class="fa-solid ${app.icon}"></i>`;
